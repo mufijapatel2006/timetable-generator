@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Generated Timetable</h2>
+
+{% for class_name, table in timetable.items() %}
+
+<div class="card shadow mb-5">
+
+<div class="card-header bg-dark text-white">
+<h4>{{ class_name }}</h4>
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered text-center align-middle">
+
+<tr class="table-dark">
+
+<th>Day</th>
+<th>P1</th>
+<th>P2</th>
+<th>P3</th>
+<th>P4</th>
+<th>P5</th>
+<th>P6</th>
+
+</tr>
+
+{% for day in range(5) %}
+
+<tr>
+
+<td>
+{{ ['Monday','Tuesday','Wednesday','Thursday','Friday'][day] }}
+</td>
+
+{% for slot in range(6) %}
+
+<td>
+{{ table[day][slot] | safe if table[day][slot] }}
+</td>
+
+{% endfor %}
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

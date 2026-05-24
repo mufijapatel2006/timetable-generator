@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-3">Manage Data</h3>
+
+<!-- SUBJECTS -->
+<div class="card shadow p-3 mb-4">
+    <h5>Subjects</h5>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th><th>Name</th><th>Type</th><th>Hours</th><th>Action</th>
+        </tr>
+
+        {% for s in subjects %}
+        <tr>
+            <td>{{ s[0] }}</td>
+            <td>{{ s[1] }}</td>
+            <td>{{ s[2] }}</td>
+            <td>{{ s[3] }}</td>
+            <td>
+                <a href="/edit_subject/{{ s[0] }}" class="btn btn-warning btn-sm">Edit</a>
+                <button onclick="confirmDelete('/delete_subject/{{ s[0] }}')" class="btn btn-danger btn-sm">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!-- ROOMS -->
+<div class="card shadow p-3">
+    <h5>Rooms</h5>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th><th>Name</th><th>Type</th><th>Action</th>
+        </tr>
+
+        {% for r in rooms %}
+        <tr>
+            <td>{{ r[0] }}</td>
+            <td>{{ r[1] }}</td>
+            <td>{{ r[2] }}</td>
+            <td>
+                <a href="/edit_room/{{ r[0] }}" class="btn btn-warning btn-sm">Edit</a>
+                <button onclick="confirmDelete('/delete_room/{{ r[0] }}')" class="btn btn-danger btn-sm">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

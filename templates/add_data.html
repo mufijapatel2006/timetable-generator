@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow p-4">
+    <h4>Add Subject</h4>
+
+    <form method="POST">
+
+        <div class="row mb-3">
+            <div class="col">
+                <label>Subject Name</label>
+                <input type="text" name="subject" class="form-control" required>
+            </div>
+
+            <div class="col">
+                <label>Type</label>
+                <select name="type" class="form-control">
+                    <option>Theory</option>
+                    <option>Practical</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label>Hours</label>
+                <input type="number" name="hours" class="form-control" required>
+            </div>
+
+            <div class="col">
+                <label>Class</label>
+                <select name="class" class="form-control">
+                    {% for c in classes %}
+                    <option value="{{ c[0] }}">{{ c[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Faculty</label>
+            <select name="faculty" class="form-control">
+                {% for f in faculty %}
+                <option value="{{ f[0] }}">{{ f[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="btn btn-primary">Add Subject</button>
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow p-4">
+    <h4>Edit Subject</h4>
+
+    <form method="POST">
+
+        <input type="text" name="name" value="{{ subject[1] }}" class="form-control mb-2">
+
+        <select name="type" class="form-control mb-2">
+            <option {% if subject[2]=='Theory' %}selected{% endif %}>Theory</option>
+            <option {% if subject[2]=='Practical' %}selected{% endif %}>Practical</option>
+        </select>
+
+        <input type="number" name="hours" value="{{ subject[3] }}" class="form-control mb-2">
+
+        <button class="btn btn-warning">Update</button>
+    </form>
+
+</div>
+
+{% endblock %}

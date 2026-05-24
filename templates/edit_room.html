@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow p-4">
+    <h4>Edit Room</h4>
+
+    <form method="POST">
+
+        <input type="text" name="name" value="{{ room[1] }}" class="form-control mb-2">
+
+        <select name="type" class="form-control mb-2">
+            <option {% if room[2]=='Classroom' %}selected{% endif %}>Classroom</option>
+            <option {% if room[2]=='Lab' %}selected{% endif %}>Lab</option>
+        </select>
+
+        <button class="btn btn-warning">Update</button>
+    </form>
+
+</div>
+
+{% endblock %}

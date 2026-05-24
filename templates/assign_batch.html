@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow p-4">
+    <h4 class="mb-3">Assign Batch Faculty</h4>
+
+    <form method="POST">
+
+        <!-- CLASS + SUBJECT -->
+        <div class="row mb-3">
+            <div class="col">
+                <label>Class</label>
+                <select name="class" class="form-control" required>
+                    {% for c in classes %}
+                    <option value="{{ c[0] }}">{{ c[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <label>Practical Subject</label>
+                <select name="subject" class="form-control" required>
+                    {% for s in subjects %}
+                    <option value="{{ s[0] }}">{{ s[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- BATCH ASSIGNMENT -->
+        <div class="row g-3">
+
+            {% for batch in ['A1','A2','A3','A4'] %}
+            <div class="col-md-3">
+                <label>{{ batch }}</label>
+                <select name="{{ batch }}" class="form-control" required>
+                    {% for f in faculty %}
+                    <option value="{{ f[0] }}">{{ f[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <button class="btn btn-warning mt-3">Assign Batches</button>
+
+    </form>
+</div>
+
+{% endblock %}
