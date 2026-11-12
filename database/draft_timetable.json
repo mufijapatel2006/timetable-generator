@@ -1,0 +1,181 @@
+{
+  "data": {
+    "SY-A": [
+      [
+        "OE (Mr. R. D. Koshti) [Classroom 2]",
+        "P&S (Ms. S. M. Zende) [Classroom 2]",
+        "DAA (Mrs. P. R. Chougule) [Classroom 1]",
+        "MARATHI (Mr. P. M. Karande) [Classroom 3]",
+        "CAO (Mr. A. B. Jagdale) [Classroom 3]",
+        "ADC (Mrs U. V. Patil) [Seminar]"
+      ],
+      [
+        "MARATHI (Mr. P. M. Karande) [Classroom 3]",
+        "LBBA (Mr. P. M. Karande) [Classroom 2]",
+        "PYTHON (Mrs. T. S. Mali) [Classroom 2]",
+        "P&S (Ms. S. M. Zende) [Classroom 1]",
+        "CAO (Mr. A. B. Jagdale) [Classroom 2]",
+        "OE (Mr. R. D. Koshti) [Seminar]"
+      ],
+      [
+        "DAA (Mrs. P. R. Chougule) [Classroom 2]",
+        "ADC (Mrs U. V. Patil) [Classroom 3]",
+        "COI (Mrs. A. V. Patil) [Classroom 3]",
+        "Library / Self-Study",
+        "CAO (Mr. A. B. Jagdale) [Classroom 3]",
+        "Library / Self-Study"
+      ],
+      [
+        "PYTHON (Mrs. T. S. Mali) [Classroom 3]",
+        "DAA (Mrs. P. R. Chougule) [Classroom 2]",
+        "MARATHI (Mr. P. M. Karande) [Classroom 1]",
+        "COI (Mrs. A. V. Patil) [Classroom 1]",
+        "PYTHON (Mrs. T. S. Mali) [Lab 4] - A1<br>FSDP (Mr. V. B. Dhere) [Lab 7] - A2<br>FSDP (Mrs. P. R. Rajmane) [Lab 2] - A3<br>DAA (Mrs. P. R. Chougule) [Lab 5] - A4",
+        "CONT"
+      ],
+      [
+        "DAA (Mrs. P. R. Chougule) [Lab 4] - A1<br>FSDP (Mr. V. B. Dhere) [Lab 7] - A2<br>FSDP (Mrs. P. R. Rajmane) [Lab 8] - A3<br>PYTHON (Mrs. T. S. Mali) [Lab 6] - A4",
+        "CONT",
+        "FSDP (Mr. V. B. Dhere) [Lab 8] - A1<br>DAA (Mrs. P. R. Chougule) [Lab 6] - A2<br>PYTHON (Mrs. T. S. Mali) [Lab 5] - A3<br>FSDP (Mrs. P. R. Rajmane) [Lab 3] - A4",
+        "CONT",
+        "P&S (Ms. S. M. Zende) [Classroom 3]",
+        "MARATHI (Mr. P. M. Karande) [Classroom 3]"
+      ]
+    ],
+    "SY-B": [
+      [
+        "COI (Mrs. A. V. Patil) [Classroom 3]",
+        "LBBA (Mr. P. M. Karande) [Classroom 3]",
+        "Library / Self-Study",
+        "P&S (Ms. S. M. Zende) [Classroom 2]",
+        "DAA (Mrs. P. R. Rajmane) [Seminar]",
+        "CAO (Mr. V. B. Dhere) [Classroom 3]"
+      ],
+      [
+        "DAA (Mrs. P. R. Rajmane) [Lab 6] - A1<br>FSDP (Mrs. P. R. Chougule) [Lab 7] - A2<br>PYTHON (Mr. K. B. Desai) [Lab 2] - A3<br>FSDP (Mrs. D. D. Dhokate) [Lab 4] - A4",
+        "CONT",
+        "PYTHON (Mr. K. B. Desai) [Classroom 3]",
+        "DAA (Mrs. P. R. Rajmane) [Classroom 2]",
+        "Library / Self-Study",
+        "CAO (Mr. V. B. Dhere) [Classroom 3]"
+      ],
+      [
+        "CAO (Mr. V. B. Dhere) [Classroom 1]",
+        "ADC (Ms. S. S. Parekh) [Seminar]",
+        "DAA (Mrs. P. R. Rajmane) [Classroom 2]",
+        "OE (Mr. R. D. Koshti) [Classroom 2]",
+        "Library / Self-Study",
+        "P&S (Ms. S. M. Zende) [Classroom 2]"
+      ],
+      [
+        "PYTHON (Mr. A. B. Jagdale) [Lab 2] - A1<br>DAA (Mrs. P. R. Rajmane) [Lab 7] - A2<br>FSDP (Mrs. D. D. Dhokate) [Lab 3] - A3<br>PYTHON (Mr. K. B. Desai) [Lab 8] - A4",
+        "CONT",
+        "FSDP (Mrs. P. R. Chougule) [Lab 8] - A1<br>PYTHON (Mr. A. B. Jagdale) [Lab 3] - A2<br>DAA (Mrs. P. R. Rajmane) [Lab 4] - A3<br>FSDP (Mrs. D. D. Dhokate) [Lab 1] - A4",
+        "CONT",
+        "Library / Self-Study",
+        "ADC (Ms. S. S. Parekh) [Classroom 2]"
+      ],
+      [
+        "COI (Mrs. A. V. Patil) [Classroom 2]",
+        "Library / Self-Study",
+        "P&S (Ms. S. M. Zende) [Classroom 2]",
+        "OE (Mr. R. D. Koshti) [Classroom 2]",
+        "Library / Self-Study",
+        "Library / Self-Study"
+      ]
+    ],
+    "TY-A": [
+      [
+        "IOT (Mr. V. B. Dhere) [Classroom 1]",
+        "ML (Mrs. D. D. Dhokate) [Classroom 1]",
+        "MP (Mr. V. B. Dhere) [Lab 6] - A1<br>ML (Mrs. D. D. Dhokate) [Lab 4] - A2<br>MP (Mrs U. V. Patil) [Lab 5] - A3<br>CPML (Ms. S. S. Parekh) [Lab 8] - A4",
+        "CONT",
+        "ML (Mrs. D. D. Dhokate) [Classroom 2]",
+        "CD (Mrs. P. R. Rajmane) [Classroom 1]"
+      ],
+      [
+        "ESD (Mrs U. V. Patil) [Classroom 2]",
+        "CN (Mrs. T. S. Mali) [Classroom 1]",
+        "MP (Mr. V. B. Dhere) [Lab 7] - A1<br>CPML (Ms. S. S. Parekh) [Lab 5] - A2<br>MP (Mrs U. V. Patil) [Lab 1] - A3<br>ML (Mrs. D. D. Dhokate) [Lab 8] - A4",
+        "CONT",
+        "IOT (Mr. V. B. Dhere) [Classroom 1]",
+        "CD (Mrs. P. R. Rajmane) [Classroom 2]"
+      ],
+      [
+        "ESD (Mrs U. V. Patil) [Classroom 3]",
+        "CD (Mrs. P. R. Rajmane) [Classroom 1]",
+        "ML (Mrs. D. D. Dhokate) [Classroom 1]",
+        "CN (Mrs. T. S. Mali) [Classroom 1]",
+        "CD (Mrs. P. R. Rajmane) [Classroom 1]",
+        "CN (Mrs. T. S. Mali) [Classroom 1]"
+      ],
+      [
+        "ESD (Mrs U. V. Patil) [Classroom 2]",
+        "IOT (Mr. V. B. Dhere) [Classroom 1]",
+        "Library / Self-Study",
+        "Library / Self-Study",
+        "ML (Mrs. D. D. Dhokate) [Classroom 1]",
+        "ESD (Mrs U. V. Patil) [Classroom 1]"
+      ],
+      [
+        "CPML (Ms. S. S. Parekh) [Classroom 3]",
+        "ESD (Mrs U. V. Patil) [Classroom 2]",
+        "ML (Mrs. D. D. Dhokate) [Lab 7] - A1<br>MP (Mr. A. B. Jagdale) [Lab 1] - A2<br>CPML (Ms. S. S. Parekh) [Lab 2] - A3<br>MP (Mrs U. V. Patil) [Lab 4] - A4",
+        "CONT",
+        "ESD (Mrs U. V. Patil) [Classroom 2]",
+        "CN (Mrs. T. S. Mali) [Classroom 1]"
+      ]
+    ],
+    "TY-B": [
+      [
+        "MP (Ms. S. S. Parekh) [Lab 6] - A1<br>MP (Mrs. T. S. Mali) [Lab 2] - A2<br>ML (Mr. K. B. Desai) [Lab 4] - A3<br>CPML (Mrs U. V. Patil) [Lab 5] - A4",
+        "CONT",
+        "IOT (Mr. A. B. Jagdale) [Classroom 2]",
+        "CD (Ms. M. V. Pujari) [Classroom 1]",
+        "CN (Mrs. P. R. Chougule) [Classroom 1]",
+        "ML (Mr. K. B. Desai) [Classroom 2]"
+      ],
+      [
+        "CD (Ms. M. V. Pujari) [Classroom 1]",
+        "Library / Self-Study",
+        "IOT (Mr. A. B. Jagdale) [Classroom 1]",
+        "Library / Self-Study",
+        "ESD (Ms. S. S. Parekh) [Classroom 3]",
+        "CN (Mrs. P. R. Chougule) [Classroom 1]"
+      ],
+      [
+        "Library / Self-Study",
+        "CN (Mrs. P. R. Chougule) [Classroom 2]",
+        "CPML (Mrs U. V. Patil) [Lab 6] - A1<br>ML (Mr. K. B. Desai) [Lab 5] - A2<br>MP (Mr. V. B. Dhere) [Lab 8] - A3<br>MP (Mr. A. B. Jagdale) [Lab 3] - A4",
+        "CONT",
+        "ML (Mr. K. B. Desai) [Classroom 2]",
+        "CPML (Mrs U. V. Patil) [Classroom 3]"
+      ],
+      [
+        "CN (Mrs. P. R. Chougule) [Classroom 1]",
+        "Library / Self-Study",
+        "MP (Ms. S. S. Parekh) [Lab 2] - A1<br>CPML (Mrs U. V. Patil) [Lab 7] - A2<br>MP (Mr. V. B. Dhere) [Lab 5] - A3<br>ML (Mr. K. B. Desai) [Lab 6] - A4",
+        "CONT",
+        "ESD (Ms. S. S. Parekh) [Classroom 2]",
+        "Library / Self-Study"
+      ],
+      [
+        "CD (Ms. M. V. Pujari) [Classroom 1]",
+        "ESD (Ms. S. S. Parekh) [Classroom 1]",
+        "ML (Mr. K. B. Desai) [Classroom 1]",
+        "ML (Mr. K. B. Desai) [Classroom 1]",
+        "CD (Ms. M. V. Pujari) [Classroom 1]",
+        "IOT (Mr. A. B. Jagdale) [Classroom 2]"
+      ]
+    ]
+  },
+  "status": "Draft",
+  "version": 5,
+  "created_at": "2026-10-28 15:50:10",
+  "updated_at": "2026-10-28 15:50:10",
+  "updated_by": "System Administrator (@admin)",
+  "approved_by": null,
+  "approved_at": null,
+  "published_by": null,
+  "published_at": null
+}

@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-tools text-warning me-2"></i>Laboratory Availability &amp; Maintenance Schedule
+        </h2>
+        <p class="text-muted mb-0">
+            Facility: <strong class="text-dark">{{ lab.name }}</strong> ({{ lab.code }}) &bull; Department: {{ lab.department }}
+        </p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="/admin/labs" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i>Back to Laboratories
+        </a>
+        <a href="/admin/rooms_timetable?room={{ lab.name|urlencode }}" class="btn btn-outline-primary shadow-sm">
+            <i class="bi bi-calendar3 me-1"></i>View Active Timetable
+        </a>
+    </div>
+</div>
+
+<!-- CAPACITY & DOWNTIME METRIC BANNER -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase fw-bold">Standard Weekly Slots</span>
+            <h3 class="fw-bold text-primary mb-0 mt-1">30 <span class="fs-6 fw-normal text-muted">Periods</span></h3>
+            <span class="small text-muted">5 Days &times; 6 Periods per day</span>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase fw-bold">Maintenance Downtime</span>
+            <h3 class="fw-bold text-danger mb-0 mt-1">{{ blocked_set|length }} <span class="fs-6 fw-normal text-muted">Periods</span></h3>
+            <span class="small text-muted">Reserved for upgrades &amp; downtime</span>
+        </div>
+    </div>
+    <div class="col-md-4 col-12">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white text-center">
+            <span class="text-muted small text-uppercase fw-bold">Net Operating Capacity</span>
+            <h3 class="fw-bold text-success mb-0 mt-1">{{ 30 - (blocked_set|length) }} <span class="fs-6 fw-normal text-muted">Periods / Week</span></h3>
+            <span class="small text-muted">Available for academic sessions</span>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 mb-4 p-3">
+    <span class="fs-3">💡</span>
+    <div class="small">
+        <strong>Intelligent Scheduling Guarantee:</strong>
+        Slots checked below are designated as <em>Maintenance / Downtime</em>. The automated timetable generator and conflict avoidance engine will strictly never schedule any practicals, lectures, or batch sessions during these periods.
+    </div>
+</div>
+
+<!-- INTERACTIVE 5x6 AVAILABILITY GRID -->
+<form method="POST" action="/admin/labs/{{ lab.id }}/availability">
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white mb-4">
+        <div class="card-header bg-white py-3 px-4 border-0 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <h5 class="fw-bold mb-0">Weekly Maintenance &amp; Downtime Grid</h5>
+                <span class="text-muted small">Check slots to mark downtime &bull; Uncheck to make available</span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" onclick="clearAllSlots()">
+                    Clear All Downtime
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 fw-semibold shadow-sm">
+                    <i class="bi bi-save me-1"></i>Save Schedule
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive p-3">
+            <table class="table table-bordered align-middle text-center mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3 py-3" style="width: 120px;">Day / Time</th>
+                        {% for p in periods %}
+                        <th class="py-3">
+                            <div class="fw-bold">{{ p }}</div>
+                            <span class="small text-muted font-monospace" style="font-size: 0.72rem;">Slot {{ loop.index }}</span>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in days %}
+                    {% set day_idx = loop.index0 %}
+                    <tr>
+                        <td class="fw-bold bg-light py-3 ps-3 text-start">
+                            <span class="fs-6">{{ day }}</span>
+                        </td>
+                        {% for p in periods %}
+                        {% set p_idx = loop.index0 %}
+                        {% set slot_key = day ~ '_' ~ p_idx %}
+                        {% set is_blocked = slot_key in blocked_set %}
+                        {% set cell_events = schedule[day_idx][p_idx] if schedule and schedule|length > day_idx and schedule[day_idx]|length > p_idx else [] %}
+
+                        <td class="p-2 {% if is_blocked %}bg-danger-subtle border-danger{% elif cell_events %}bg-success-subtle{% else %}bg-white{% endif %}" style="min-width: 140px; height: 85px; vertical-align: top;">
+                            <div class="form-check d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-check-label small fw-semibold cursor-pointer text-muted" for="slot_{{ slot_key }}">
+                                    {% if is_blocked %}
+                                    <span class="text-danger fw-bold"><i class="bi bi-tools me-1"></i>Downtime</span>
+                                    {% else %}
+                                    <span class="text-success"><i class="bi bi-check-circle me-1"></i>Open</span>
+                                    {% endif %}
+                                </label>
+                                <input class="form-check-input slot-checkbox" type="checkbox" name="blocked_slots" value="{{ slot_key }}" id="slot_{{ slot_key }}" {% if is_blocked %}checked{% endif %} onchange="handleSlotChange(this)">
+                            </div>
+
+                            {% if cell_events %}
+                            <div class="mt-1 text-start">
+                                {% for ev in cell_events %}
+                                <div class="badge bg-white text-dark border shadow-xs p-1 d-block text-truncate mb-1" style="font-size: 0.68rem;" title="{{ ev.text }}">
+                                    <span class="text-primary fw-bold">{{ ev.class }}</span>
+                                    {% if ev.batch %}- <span class="text-danger">{{ ev.batch }}</span>{% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% elif is_blocked %}
+                            <div class="small text-danger fst-italic" style="font-size: 0.72rem;">
+                                Facility Unavailable
+                            </div>
+                            {% else %}
+                            <div class="small text-muted opacity-50" style="font-size: 0.72rem;">
+                                Free Slot
+                            </div>
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer bg-white py-3 px-4 d-flex justify-content-between align-items-center">
+            <span class="small text-muted">
+                Changes will be enforced immediately during subsequent timetable generations and validations.
+            </span>
+            <button type="submit" class="btn btn-primary px-5 fw-semibold shadow-sm">
+                <i class="bi bi-save me-1"></i>Save Maintenance Schedule
+            </button>
+        </div>
+    </div>
+</form>
+
+<script>
+function handleSlotChange(chk) {
+    const parentTd = chk.closest('td');
+    if (chk.checked) {
+        parentTd.classList.remove('bg-white');
+        parentTd.classList.add('bg-danger-subtle', 'border-danger');
+    } else {
+        parentTd.classList.remove('bg-danger-subtle', 'border-danger');
+        parentTd.classList.add('bg-white');
+    }
+}
+
+function clearAllSlots() {
+    if (confirm("Clear all maintenance slots? The laboratory will be 100% available for all periods.")) {
+        document.querySelectorAll('.slot-checkbox').forEach(chk => {
+            chk.checked = false;
+            handleSlotChange(chk);
+        });
+    }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,841 @@
+{
+  "batch_faculty": [
+    {
+      "id": 1,
+      "class_id": 1,
+      "subject_id": 10,
+      "batch": "A1",
+      "faculty_id": 1
+    },
+    {
+      "id": 2,
+      "class_id": 1,
+      "subject_id": 10,
+      "batch": "A2",
+      "faculty_id": 1
+    },
+    {
+      "id": 3,
+      "class_id": 1,
+      "subject_id": 10,
+      "batch": "A3",
+      "faculty_id": 1
+    },
+    {
+      "id": 4,
+      "class_id": 1,
+      "subject_id": 10,
+      "batch": "A4",
+      "faculty_id": 1
+    },
+    {
+      "id": 5,
+      "class_id": 1,
+      "subject_id": 12,
+      "batch": "A1",
+      "faculty_id": 4
+    },
+    {
+      "id": 6,
+      "class_id": 1,
+      "subject_id": 12,
+      "batch": "A2",
+      "faculty_id": 4
+    },
+    {
+      "id": 7,
+      "class_id": 1,
+      "subject_id": 12,
+      "batch": "A3",
+      "faculty_id": 4
+    },
+    {
+      "id": 8,
+      "class_id": 1,
+      "subject_id": 12,
+      "batch": "A4",
+      "faculty_id": 4
+    },
+    {
+      "id": 9,
+      "class_id": 1,
+      "subject_id": 13,
+      "batch": "A1",
+      "faculty_id": 8
+    },
+    {
+      "id": 10,
+      "class_id": 1,
+      "subject_id": 13,
+      "batch": "A2",
+      "faculty_id": 8
+    },
+    {
+      "id": 11,
+      "class_id": 1,
+      "subject_id": 13,
+      "batch": "A3",
+      "faculty_id": 7
+    },
+    {
+      "id": 12,
+      "class_id": 1,
+      "subject_id": 13,
+      "batch": "A4",
+      "faculty_id": 7
+    },
+    {
+      "id": 13,
+      "class_id": 2,
+      "subject_id": 11,
+      "batch": "A1",
+      "faculty_id": 7
+    },
+    {
+      "id": 14,
+      "class_id": 2,
+      "subject_id": 11,
+      "batch": "A2",
+      "faculty_id": 7
+    },
+    {
+      "id": 15,
+      "class_id": 2,
+      "subject_id": 11,
+      "batch": "A3",
+      "faculty_id": 7
+    },
+    {
+      "id": 16,
+      "class_id": 2,
+      "subject_id": 11,
+      "batch": "A4",
+      "faculty_id": 7
+    },
+    {
+      "id": 17,
+      "class_id": 2,
+      "subject_id": 24,
+      "batch": "A1",
+      "faculty_id": 2
+    },
+    {
+      "id": 18,
+      "class_id": 2,
+      "subject_id": 24,
+      "batch": "A2",
+      "faculty_id": 2
+    },
+    {
+      "id": 19,
+      "class_id": 2,
+      "subject_id": 24,
+      "batch": "A3",
+      "faculty_id": 11
+    },
+    {
+      "id": 20,
+      "class_id": 2,
+      "subject_id": 24,
+      "batch": "A4",
+      "faculty_id": 11
+    },
+    {
+      "id": 21,
+      "class_id": 2,
+      "subject_id": 25,
+      "batch": "A1",
+      "faculty_id": 1
+    },
+    {
+      "id": 22,
+      "class_id": 2,
+      "subject_id": 25,
+      "batch": "A2",
+      "faculty_id": 1
+    },
+    {
+      "id": 23,
+      "class_id": 2,
+      "subject_id": 25,
+      "batch": "A3",
+      "faculty_id": 13
+    },
+    {
+      "id": 24,
+      "class_id": 2,
+      "subject_id": 25,
+      "batch": "A4",
+      "faculty_id": 13
+    },
+    {
+      "id": 25,
+      "class_id": 3,
+      "subject_id": 34,
+      "batch": "A1",
+      "faculty_id": 13
+    },
+    {
+      "id": 26,
+      "class_id": 3,
+      "subject_id": 34,
+      "batch": "A2",
+      "faculty_id": 13
+    },
+    {
+      "id": 27,
+      "class_id": 3,
+      "subject_id": 34,
+      "batch": "A3",
+      "faculty_id": 13
+    },
+    {
+      "id": 28,
+      "class_id": 3,
+      "subject_id": 34,
+      "batch": "A4",
+      "faculty_id": 13
+    },
+    {
+      "id": 29,
+      "class_id": 3,
+      "subject_id": 35,
+      "batch": "A1",
+      "faculty_id": 12
+    },
+    {
+      "id": 30,
+      "class_id": 3,
+      "subject_id": 35,
+      "batch": "A2",
+      "faculty_id": 12
+    },
+    {
+      "id": 31,
+      "class_id": 3,
+      "subject_id": 35,
+      "batch": "A3",
+      "faculty_id": 12
+    },
+    {
+      "id": 32,
+      "class_id": 3,
+      "subject_id": 35,
+      "batch": "A4",
+      "faculty_id": 12
+    },
+    {
+      "id": 33,
+      "class_id": 3,
+      "subject_id": 36,
+      "batch": "A1",
+      "faculty_id": 8
+    },
+    {
+      "id": 34,
+      "class_id": 3,
+      "subject_id": 36,
+      "batch": "A2",
+      "faculty_id": 2
+    },
+    {
+      "id": 35,
+      "class_id": 3,
+      "subject_id": 36,
+      "batch": "A3",
+      "faculty_id": 6
+    },
+    {
+      "id": 36,
+      "class_id": 3,
+      "subject_id": 36,
+      "batch": "A4",
+      "faculty_id": 6
+    },
+    {
+      "id": 37,
+      "class_id": 4,
+      "subject_id": 43,
+      "batch": "A1",
+      "faculty_id": 11
+    },
+    {
+      "id": 38,
+      "class_id": 4,
+      "subject_id": 43,
+      "batch": "A2",
+      "faculty_id": 11
+    },
+    {
+      "id": 39,
+      "class_id": 4,
+      "subject_id": 43,
+      "batch": "A3",
+      "faculty_id": 11
+    },
+    {
+      "id": 40,
+      "class_id": 4,
+      "subject_id": 43,
+      "batch": "A4",
+      "faculty_id": 11
+    },
+    {
+      "id": 41,
+      "class_id": 4,
+      "subject_id": 44,
+      "batch": "A1",
+      "faculty_id": 6
+    },
+    {
+      "id": 42,
+      "class_id": 4,
+      "subject_id": 44,
+      "batch": "A2",
+      "faculty_id": 6
+    },
+    {
+      "id": 43,
+      "class_id": 4,
+      "subject_id": 44,
+      "batch": "A3",
+      "faculty_id": 6
+    },
+    {
+      "id": 44,
+      "class_id": 4,
+      "subject_id": 44,
+      "batch": "A4",
+      "faculty_id": 6
+    },
+    {
+      "id": 45,
+      "class_id": 4,
+      "subject_id": 45,
+      "batch": "A1",
+      "faculty_id": 12
+    },
+    {
+      "id": 46,
+      "class_id": 4,
+      "subject_id": 45,
+      "batch": "A2",
+      "faculty_id": 4
+    },
+    {
+      "id": 47,
+      "class_id": 4,
+      "subject_id": 45,
+      "batch": "A3",
+      "faculty_id": 8
+    },
+    {
+      "id": 48,
+      "class_id": 4,
+      "subject_id": 45,
+      "batch": "A4",
+      "faculty_id": 2
+    }
+  ],
+  "batch_subject": [],
+  "classes": [
+    {
+      "id": 1,
+      "name": "SY-A"
+    },
+    {
+      "id": 2,
+      "name": "SY-B"
+    },
+    {
+      "id": 3,
+      "name": "TY-A"
+    },
+    {
+      "id": 4,
+      "name": "TY-B"
+    }
+  ],
+  "faculty": [
+    {
+      "id": 1,
+      "name": "Mrs. P. R. Chougule"
+    },
+    {
+      "id": 2,
+      "name": "Mr. A. B. Jagdale"
+    },
+    {
+      "id": 3,
+      "name": "Ms. S. M. Zende"
+    },
+    {
+      "id": 4,
+      "name": "Mrs. T. S. Mali"
+    },
+    {
+      "id": 5,
+      "name": "Mr. R. D. Koshti"
+    },
+    {
+      "id": 6,
+      "name": "Mrs U. V. Patil"
+    },
+    {
+      "id": 7,
+      "name": "Mrs. P. R. Rajmane"
+    },
+    {
+      "id": 8,
+      "name": "Mr. V. B. Dhere"
+    },
+    {
+      "id": 9,
+      "name": "Mrs. A. V. Patil"
+    },
+    {
+      "id": 10,
+      "name": "Mr. P. M. Karande"
+    },
+    {
+      "id": 11,
+      "name": "Mr. K. B. Desai"
+    },
+    {
+      "id": 12,
+      "name": "Ms. S. S. Parekh"
+    },
+    {
+      "id": 13,
+      "name": "Mrs. D. D. Dhokate"
+    },
+    {
+      "id": 14,
+      "name": "Ms. M. V. Pujari"
+    }
+  ],
+  "rooms": [
+    {
+      "id": 1,
+      "name": "Classroom 1",
+      "type": "Classroom"
+    },
+    {
+      "id": 2,
+      "name": "Classroom 2",
+      "type": "Classroom"
+    },
+    {
+      "id": 3,
+      "name": "Classroom 3",
+      "type": "Classroom"
+    },
+    {
+      "id": 4,
+      "name": "Seminar",
+      "type": "Classroom"
+    },
+    {
+      "id": 5,
+      "name": "Lab 1",
+      "type": "Lab"
+    },
+    {
+      "id": 6,
+      "name": "Lab 2",
+      "type": "Lab"
+    },
+    {
+      "id": 7,
+      "name": "Lab 3",
+      "type": "Lab"
+    },
+    {
+      "id": 8,
+      "name": "Lab 4",
+      "type": "Lab"
+    },
+    {
+      "id": 9,
+      "name": "Lab 5",
+      "type": "Lab"
+    },
+    {
+      "id": 10,
+      "name": "Lab 6",
+      "type": "Lab"
+    },
+    {
+      "id": 11,
+      "name": "Lab 7",
+      "type": "Lab"
+    },
+    {
+      "id": 12,
+      "name": "Lab 8",
+      "type": "Lab"
+    }
+  ],
+  "subjects": [
+    {
+      "id": 1,
+      "name": "CAO",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 1,
+      "faculty_id": 2
+    },
+    {
+      "id": 2,
+      "name": "P&S",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 1,
+      "faculty_id": 3
+    },
+    {
+      "id": 3,
+      "name": "OE",
+      "type": "Theory",
+      "hours": 2,
+      "class_id": 1,
+      "faculty_id": 5
+    },
+    {
+      "id": 4,
+      "name": "COI",
+      "type": "Theory",
+      "hours": 2,
+      "class_id": 1,
+      "faculty_id": 9
+    },
+    {
+      "id": 5,
+      "name": "LBBA",
+      "type": "Theory",
+      "hours": 1,
+      "class_id": 1,
+      "faculty_id": 10
+    },
+    {
+      "id": 6,
+      "name": "MARATHI",
+      "type": "Theory",
+      "hours": 2,
+      "class_id": 1,
+      "faculty_id": 10
+    },
+    {
+      "id": 7,
+      "name": "DAA",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 1,
+      "faculty_id": 1
+    },
+    {
+      "id": 8,
+      "name": "PYTHON",
+      "type": "Theory",
+      "hours": 1,
+      "class_id": 1,
+      "faculty_id": 4
+    },
+    {
+      "id": 9,
+      "name": "PYTHON",
+      "type": "Theory",
+      "hours": 1,
+      "class_id": 1,
+      "faculty_id": 4
+    },
+    {
+      "id": 10,
+      "name": "DAA",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 1,
+      "faculty_id": 1
+    },
+    {
+      "id": 11,
+      "name": "DAA",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 1,
+      "faculty_id": 1
+    },
+    {
+      "id": 12,
+      "name": "PYTHON",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 1,
+      "faculty_id": 4
+    },
+    {
+      "id": 13,
+      "name": "FSDP",
+      "type": "Practical",
+      "hours": 16,
+      "class_id": 1,
+      "faculty_id": 7
+    },
+    {
+      "id": 14,
+      "name": "ADC",
+      "type": "Theory",
+      "hours": 2,
+      "class_id": 1,
+      "faculty_id": 6
+    },
+    {
+      "id": 15,
+      "name": "CAO",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 2,
+      "faculty_id": 8
+    },
+    {
+      "id": 16,
+      "name": "P&S",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 2,
+      "faculty_id": 3
+    },
+    {
+      "id": 17,
+      "name": "OE",
+      "type": "Theory",
+      "hours": 2,
+      "class_id": 2,
+      "faculty_id": 5
+    },
+    {
+      "id": 18,
+      "name": "COI",
+      "type": "Theory",
+      "hours": 2,
+      "class_id": 2,
+      "faculty_id": 9
+    },
+    {
+      "id": 19,
+      "name": "LBBA",
+      "type": "Theory",
+      "hours": 1,
+      "class_id": 2,
+      "faculty_id": 10
+    },
+    {
+      "id": 20,
+      "name": "MARATHI",
+      "type": "Theory",
+      "hours": 2,
+      "class_id": 1,
+      "faculty_id": 10
+    },
+    {
+      "id": 21,
+      "name": "DAA",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 2,
+      "faculty_id": 7
+    },
+    {
+      "id": 22,
+      "name": "PYTHON",
+      "type": "Theory",
+      "hours": 1,
+      "class_id": 2,
+      "faculty_id": 11
+    },
+    {
+      "id": 23,
+      "name": "DAA",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 2,
+      "faculty_id": 7
+    },
+    {
+      "id": 24,
+      "name": "PYTHON",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 2,
+      "faculty_id": 11
+    },
+    {
+      "id": 25,
+      "name": "FSDP",
+      "type": "Practical",
+      "hours": 16,
+      "class_id": 2,
+      "faculty_id": 13
+    },
+    {
+      "id": 26,
+      "name": "ADC",
+      "type": "Theory",
+      "hours": 2,
+      "class_id": 2,
+      "faculty_id": 12
+    },
+    {
+      "id": 27,
+      "name": "CD",
+      "type": "Theory",
+      "hours": 4,
+      "class_id": 3,
+      "faculty_id": 7
+    },
+    {
+      "id": 28,
+      "name": "CN",
+      "type": "Theory",
+      "hours": 4,
+      "class_id": 3,
+      "faculty_id": 4
+    },
+    {
+      "id": 29,
+      "name": "IOT",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 3,
+      "faculty_id": 8
+    },
+    {
+      "id": 30,
+      "name": "ESD",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 3,
+      "faculty_id": 6
+    },
+    {
+      "id": 31,
+      "name": "ESD",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 3,
+      "faculty_id": 6
+    },
+    {
+      "id": 32,
+      "name": "ML",
+      "type": "Theory",
+      "hours": 4,
+      "class_id": 3,
+      "faculty_id": 13
+    },
+    {
+      "id": 33,
+      "name": "CPML",
+      "type": "Theory",
+      "hours": 1,
+      "class_id": 3,
+      "faculty_id": 12
+    },
+    {
+      "id": 34,
+      "name": "ML",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 3,
+      "faculty_id": 13
+    },
+    {
+      "id": 35,
+      "name": "CPML",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 3,
+      "faculty_id": 12
+    },
+    {
+      "id": 36,
+      "name": "MP",
+      "type": "Practical",
+      "hours": 4,
+      "class_id": 3,
+      "faculty_id": 11
+    },
+    {
+      "id": 37,
+      "name": "CD",
+      "type": "Theory",
+      "hours": 4,
+      "class_id": 4,
+      "faculty_id": 14
+    },
+    {
+      "id": 38,
+      "name": "CN",
+      "type": "Theory",
+      "hours": 4,
+      "class_id": 4,
+      "faculty_id": 1
+    },
+    {
+      "id": 39,
+      "name": "IOT",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 4,
+      "faculty_id": 2
+    },
+    {
+      "id": 40,
+      "name": "ESD",
+      "type": "Theory",
+      "hours": 3,
+      "class_id": 4,
+      "faculty_id": 12
+    },
+    {
+      "id": 41,
+      "name": "ML",
+      "type": "Theory",
+      "hours": 4,
+      "class_id": 4,
+      "faculty_id": 11
+    },
+    {
+      "id": 42,
+      "name": "CPML",
+      "type": "Theory",
+      "hours": 1,
+      "class_id": 4,
+      "faculty_id": 6
+    },
+    {
+      "id": 43,
+      "name": "ML",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 4,
+      "faculty_id": 11
+    },
+    {
+      "id": 44,
+      "name": "CPML",
+      "type": "Practical",
+      "hours": 2,
+      "class_id": 4,
+      "faculty_id": 6
+    },
+    {
+      "id": 45,
+      "name": "MP",
+      "type": "Practical",
+      "hours": 4,
+      "class_id": 4,
+      "faculty_id": 11
+    }
+  ]
+}

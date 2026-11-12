@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">Firebase Authentication Logs</h2>
+        <p class="text-muted mb-0">Real-time audit log of all Sign-In and Sign-Out events stored in Cloud Firestore</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="/admin/dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+        <a href="/admin/logs" class="btn btn-primary">Refresh Logs</a>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 bg-white">
+    <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Audit History (Collection: <code>auth_logs</code>)</h5>
+        <span class="badge bg-primary">{{ logs|length }} Log Entries</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 18%;">Timestamp</th>
+                    <th style="width: 14%;">Action</th>
+                    <th style="width: 18%;">User</th>
+                    <th style="width: 12%;">Role</th>
+                    <th style="width: 16%;">IP Address</th>
+                    <th style="width: 22%;">Device / Browser</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td class="small fw-semibold text-muted">{{ log.timestamp }}</td>
+                    <td>
+                        {% if log.action == 'LOGIN' %}
+                            <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right me-1" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
+                                    <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                                </svg>
+                                SIGN IN
+                            </span>
+                        {% elif log.action == 'LOGOUT' %}
+                            <span class="badge bg-secondary-subtle text-secondary border border-secondary px-2 py-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-left me-1" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                                    <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                                </svg>
+                                SIGN OUT
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1">
+                                FAILED
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="fw-bold">{{ log.name }}</div>
+                        <div class="text-muted small">@{{ log.username }}</div>
+                    </td>
+                    <td>
+                        {% if log.role == 'admin' %}
+                            <span class="badge bg-danger">Admin</span>
+                        {% elif log.role == 'teacher' %}
+                            <span class="badge bg-success">Teacher</span>
+                        {% elif log.role == 'student' %}
+                            <span class="badge bg-info text-dark">Student</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ log.role }}</span>
+                        {% endif %}
+                    </td>
+                    <td><code>{{ log.ip_address }}</code></td>
+                    <td class="text-truncate small text-muted" style="max-width: 200px;" title="{{ log.user_agent }}">
+                        {{ log.user_agent }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">
+                        No login or logout records recorded yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

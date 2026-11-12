@@ -1,0 +1,132 @@
+[
+  {
+    "id": "d8d85e35",
+    "timestamp": "2026-10-28 15:50:10",
+    "action": "GENERATED",
+    "version": 5,
+    "status": "Draft",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Generated new clash-free draft timetable (Version 5)."
+  },
+  {
+    "id": "77c3d746",
+    "timestamp": "2026-10-28 12:36:05",
+    "action": "PUBLISHED",
+    "version": 4,
+    "status": "Published",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Timetable v4 published to all student and teacher portals."
+  },
+  {
+    "id": "57569a2f",
+    "timestamp": "2026-10-28 12:35:40",
+    "action": "APPROVED",
+    "version": 4,
+    "status": "Approved",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Timetable v4 reviewed and approved by System Administrator."
+  },
+  {
+    "id": "8e8efa00",
+    "timestamp": "2026-10-28 12:34:27",
+    "action": "GENERATED",
+    "version": 4,
+    "status": "Draft",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Generated new clash-free draft timetable (Version 4)."
+  },
+  {
+    "id": "5dd144f9",
+    "timestamp": "2026-10-27 15:30:56",
+    "action": "PUBLISHED",
+    "version": 3,
+    "status": "Published",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Timetable v3 published to all student and teacher portals."
+  },
+  {
+    "id": "2ecf7740",
+    "timestamp": "2026-10-27 15:30:42",
+    "action": "APPROVED",
+    "version": 3,
+    "status": "Approved",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Timetable v3 reviewed and approved by System Administrator."
+  },
+  {
+    "id": "5bc6b01f",
+    "timestamp": "2026-10-27 15:29:02",
+    "action": "GENERATED",
+    "version": 3,
+    "status": "Draft",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Generated new clash-free draft timetable (Version 3)."
+  },
+  {
+    "id": "197af768",
+    "timestamp": "2026-10-27 15:14:34",
+    "action": "PUBLISHED",
+    "version": 2,
+    "status": "Published",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Timetable v2 published to all student and teacher portals. Note: Officially released for semester"
+  },
+  {
+    "id": "2b3a669d",
+    "timestamp": "2026-10-27 15:14:03",
+    "action": "APPROVED",
+    "version": 2,
+    "status": "Approved",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Timetable v2 reviewed and approved by System Administrator. Note: Principal approved"
+  },
+  {
+    "id": "ac00d8cb",
+    "timestamp": "2026-10-27 15:13:58",
+    "action": "SUBMITTED",
+    "version": 2,
+    "status": "Pending Approval",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Timetable v2 submitted for admin approval review. Note: Ready for principal review"
+  },
+  {
+    "id": "1e4cf4cc",
+    "timestamp": "2026-10-27 15:13:54",
+    "action": "EDITED_SLOT",
+    "version": 2,
+    "status": "Draft",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Edited SY-A (Monday Period 3) from 'DAA (Mrs. P. R. Chougule) [Classroom 3]' to 'ADVANCED_AI_LAB (Mrs. T. S. Mali) [Lab 1]'."
+  },
+  {
+    "id": "da8e4310",
+    "timestamp": "2026-10-27 15:13:26",
+    "action": "GENERATED",
+    "version": 2,
+    "status": "Draft",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "Generated new clash-free draft timetable (Version 2)."
+  },
+  {
+    "id": "1",
+    "timestamp": "2026-10-27 14:56:12",
+    "action": "PUBLISHED",
+    "version": 1,
+    "status": "Published",
+    "admin_username": "admin",
+    "admin_name": "System Administrator",
+    "description": "System baseline timetable initialized and published."
+  }
+]

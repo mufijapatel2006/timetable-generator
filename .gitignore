@@ -3,3 +3,8 @@ __pycache__/
 venv/
 .env
 instance/
+serviceAccountKey.json
+firebase_credentials.json
+*firebase-adminsdk*.json
+static/firebase-config.js
+

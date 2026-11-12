@@ -1,54 +1,308 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card shadow p-4">
-    <h4>Add Subject</h4>
-
-    <form method="POST">
-
-        <div class="row mb-3">
-            <div class="col">
-                <label>Subject Name</label>
-                <input type="text" name="subject" class="form-control" required>
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+        <div class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-white">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2 border-bottom pb-3">
+                <div>
+                    <h3 class="fw-bold mb-1">Add Curriculum Subject &amp; Teaching Components</h3>
+                    <p class="text-muted small mb-0">Configure Theory, Practical, and Tutorial components with primary and eligible faculty assignments.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/admin/allocations" class="btn btn-outline-primary btn-sm rounded-pill px-3">Faculty Allocations</a>
+                    <a href="/view_data" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Manage Data</a>
+                </div>
             </div>
 
-            <div class="col">
-                <label>Type</label>
-                <select name="type" class="form-control">
-                    <option>Theory</option>
-                    <option>Practical</option>
-                </select>
-            </div>
+            <form method="POST" id="subjectForm">
+                <!-- BASIC INFORMATION -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Subject Title <span class="text-danger">*</span></label>
+                        <input type="text" name="subject" class="form-control form-control-lg rounded-3" placeholder="e.g. Java Programming" required autofocus>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Target Class / Division <span class="text-danger">*</span></label>
+                        <select name="class" class="form-select form-select-lg rounded-3" required>
+                            {% for c in classes %}
+                            <option value="{{ c[0] }}">{{ c[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Academic Year</label>
+                        <input type="text" name="academic_year" class="form-control rounded-3" value="2024-2025" placeholder="e.g. 2024-2025">
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Semester / Term</label>
+                        <select name="semester" class="form-select rounded-3">
+                            <option value="Semester 1">Semester 1 (Autumn)</option>
+                            <option value="Semester 2">Semester 2 (Spring)</option>
+                            <option value="Semester 3">Semester 3</option>
+                            <option value="Semester 4">Semester 4</option>
+                            <option value="Semester 5">Semester 5</option>
+                            <option value="Semester 6">Semester 6</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- PRIMARY FACULTY -->
+                <div class="card bg-primary-subtle border-primary-subtle rounded-3 p-3 mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-person-badge-fill text-primary fs-5"></i>
+                        <h6 class="fw-bold mb-0 text-primary">Primary Faculty Assignment <span class="text-danger">*</span></h6>
+                    </div>
+                    <p class="small text-muted mb-2">
+                        The primary faculty member serves as course coordinator and will lead Theory lectures when the Theory component is enabled.
+                    </p>
+                    <select name="faculty" id="primaryFaculty" class="form-select rounded-3 form-select-lg" required>
+                        {% for f in faculty %}
+                        <option value="{{ f[0] }}">{{ f[1] }} (ID: #{{ f[0] }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- TEACHING COMPONENTS SELECTOR -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold d-block mb-2">
+                        Applicable Teaching Components <span class="text-danger">*</span>
+                        <span class="fw-normal text-muted small">(Enable one or more simultaneously)</span>
+                    </label>
+
+                    <div class="row g-3">
+                        <div class="col-md-4 col-12">
+                            <div class="form-check p-3 border rounded-3 bg-white h-100 shadow-sm component-toggle-box">
+                                <input class="form-check-input ms-0 me-2" type="checkbox" name="components" value="Theory" id="compTheory" checked onchange="toggleComponents()">
+                                <label class="form-check-label fw-bold" for="compTheory">
+                                    <i class="bi bi-book text-primary me-1"></i> Theory / Lecture
+                                </label>
+                                <span class="d-block small text-muted mt-1">Classroom lecture sessions for all students together.</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-12">
+                            <div class="form-check p-3 border rounded-3 bg-white h-100 shadow-sm component-toggle-box">
+                                <input class="form-check-input ms-0 me-2" type="checkbox" name="components" value="Practical" id="compPractical" checked onchange="toggleComponents()">
+                                <label class="form-check-label fw-bold" for="compPractical">
+                                    <i class="bi bi-cpu text-warning me-1"></i> Practical / Lab
+                                </label>
+                                <span class="d-block small text-muted mt-1">Concurrent laboratory blocks for batches A1, A2, A3, A4.</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-12">
+                            <div class="form-check p-3 border rounded-3 bg-white h-100 shadow-sm component-toggle-box">
+                                <input class="form-check-input ms-0 me-2" type="checkbox" name="components" value="Tutorial" id="compTutorial" onchange="toggleComponents()">
+                                <label class="form-check-label fw-bold" for="compTutorial">
+                                    <i class="bi bi-pencil-square text-success me-1"></i> Tutorial
+                                </label>
+                                <span class="d-block small text-muted mt-1">Focused problem-solving sessions for batch cohorts.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC CONFIGURATION: THEORY -->
+                <div id="theoryConfigSection" class="card border-0 bg-light rounded-3 p-3 p-md-4 mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="badge bg-primary px-3 py-2">THEORY CONFIGURATION</span>
+                        <h6 class="fw-bold mb-0 text-dark">Theory Lecture Load</h6>
+                    </div>
+                    <div class="row g-3 align-items-center">
+                        <div class="col-12 col-md-5">
+                            <label class="form-label fw-semibold">Weekly Lecture Hours</label>
+                            <div class="input-group">
+                                <input type="number" name="theory_hours" min="1" max="8" value="3" class="form-control rounded-start-3">
+                                <span class="input-group-text">Periods / Week</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-7">
+                            <div class="p-2 bg-white rounded-3 border small text-muted">
+                                <i class="bi bi-info-circle text-primary me-1"></i>
+                                Theory lectures are automatically assigned to the <strong>Primary Faculty</strong> member selected above.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC CONFIGURATION: PRACTICAL -->
+                <div id="practicalConfigSection" class="card border-0 bg-light rounded-3 p-3 p-md-4 mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-warning text-dark px-3 py-2">PRACTICAL CONFIGURATION</span>
+                            <h6 class="fw-bold mb-0 text-dark">Lab Batches &amp; Eligible Faculty Pool</h6>
+                        </div>
+                        <span class="badge bg-white text-dark border">Batches: A1, A2, A3, A4</span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-md-5">
+                            <label class="form-label fw-semibold">Weekly Practical Block Duration</label>
+                            <div class="input-group">
+                                <input type="number" name="practical_hours" min="2" max="6" step="2" value="2" class="form-control rounded-start-3">
+                                <span class="input-group-text">Hours (2-period blocks)</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-7">
+                            <div class="p-2 bg-white rounded-3 border small text-muted">
+                                <i class="bi bi-shield-check text-success me-1"></i>
+                                The primary faculty is <strong>not</strong> forced onto all practical batches. The system distributes batches among eligible faculty with balanced workloads.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-semibold d-block mb-1">
+                            Select Eligible Additional Practical Faculty
+                            <span class="text-muted small fw-normal">(Subject-specific authorization pool)</span>
+                        </label>
+                        <div class="card p-3 border-0 bg-white rounded-3">
+                            <div class="row g-2" style="max-height: 180px; overflow-y: auto;">
+                                {% for f in faculty %}
+                                <div class="col-md-6 col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="practical_faculty" value="{{ f[0] }}" id="prac_fac_{{ f[0] }}">
+                                        <label class="form-check-label small" for="prac_fac_{{ f[0] }}">
+                                            {{ f[1] }} <span class="text-muted">(#{{ f[0] }})</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LABORATORY & EQUIPMENT SPECIFICATIONS -->
+                    <div class="mt-3 pt-3 border-top">
+                        <div class="row g-3">
+                            <div class="col-md-4 col-12">
+                                <label class="form-label fw-semibold">Practical Batch Headcount</label>
+                                <div class="input-group">
+                                    <input type="number" name="batch_size" min="5" max="60" value="20" class="form-control rounded-start-3">
+                                    <span class="input-group-text">students</span>
+                                </div>
+                                <div class="form-text small">Labs with capacity &lt; batch size will be excluded.</div>
+                            </div>
+
+                            <div class="col-md-8 col-12">
+                                <label class="form-label fw-semibold">Preferred Laboratories</label>
+                                <select name="preferred_labs" class="form-select rounded-3" multiple size="2">
+                                    {% for lab in labs %}
+                                    <option value="{{ lab.id }}">{{ lab.name }} ({{ lab.code }}) - Cap: {{ lab.capacity }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text small">Select one or more labs (hold Ctrl/Cmd to select multiple).</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Mandatory Laboratory Equipment Requirements</label>
+                                <div class="row g-2">
+                                    {% set standard_equipment = [
+                                        "High-Performance Workstations",
+                                        "Dedicated GPU (RTX / Tensor)",
+                                        "High-Speed Gigabit LAN",
+                                        "Linux OS & Compilers",
+                                        "Embedded Systems & IoT Kits",
+                                        "Cisco Routers & Switching Racks",
+                                        "Database Server Node"
+                                    ] %}
+                                    {% for eq in standard_equipment %}
+                                    <div class="col-md-4 col-6">
+                                        <div class="form-check small">
+                                            <input class="form-check-input" type="checkbox" name="required_equipment" value="{{ eq }}" id="req_eq_{{ loop.index }}">
+                                            <label class="form-check-label" for="req_eq_{{ loop.index }}">{{ eq }}</label>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC CONFIGURATION: TUTORIAL -->
+                <div id="tutorialConfigSection" class="card border-0 bg-light rounded-3 p-3 p-md-4 mb-4" style="display: none;">
+                    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-success px-3 py-2">TUTORIAL CONFIGURATION</span>
+                            <h6 class="fw-bold mb-0 text-dark">Tutorial Batches &amp; Dedicated Faculty</h6>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-md-5">
+                            <label class="form-label fw-semibold">Weekly Tutorial Periods</label>
+                            <div class="input-group">
+                                <input type="number" name="tutorial_hours" min="1" max="4" value="1" class="form-control rounded-start-3">
+                                <span class="input-group-text">Periods / Week</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-7">
+                            <div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" name="match_tutorial_batches" value="1" id="matchTutBatches" checked>
+                                <label class="form-check-label fw-semibold small" for="matchTutBatches">
+                                    Match Practical Batches (Use cohorts A1, A2, A3, A4)
+                                </label>
+                                <div class="text-muted small">Tutorial slots adopt matching batch structures for student consistency.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label fw-semibold d-block mb-1">
+                            Select Eligible Tutorial Faculty Pool
+                            <span class="text-muted small fw-normal">(Subject-specific restriction: applied only to this subject)</span>
+                        </label>
+                        <div class="card p-3 border-0 bg-white rounded-3">
+                            <div class="row g-2" style="max-height: 180px; overflow-y: auto;">
+                                {% for f in faculty %}
+                                <div class="col-md-6 col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="tutorial_faculty" value="{{ f[0] }}" id="tut_fac_{{ f[0] }}">
+                                        <label class="form-check-label small" for="tut_fac_{{ f[0] }}">
+                                            {{ f[1] }} <span class="text-muted">(#{{ f[0] }})</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info border-0 rounded-3 small d-flex align-items-center gap-2 mb-4">
+                    <i class="bi bi-info-circle-fill fs-5"></i>
+                    <div>
+                        Upon saving, the system will automatically allocate batches based on faculty availability and workloads, and display the explicit mapping in the <strong>Faculty Allocations Matrix</strong> for your review and manual override.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg rounded-3 w-100 shadow-sm fw-bold py-3">
+                    <i class="bi bi-check-circle-fill me-2"></i> Save Subject &amp; Generate Batch Allocations
+                </button>
+            </form>
         </div>
-
-        <div class="row mb-3">
-            <div class="col">
-                <label>Hours</label>
-                <input type="number" name="hours" class="form-control" required>
-            </div>
-
-            <div class="col">
-                <label>Class</label>
-                <select name="class" class="form-control">
-                    {% for c in classes %}
-                    <option value="{{ c[0] }}">{{ c[1] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label>Faculty</label>
-            <select name="faculty" class="form-control">
-                {% for f in faculty %}
-                <option value="{{ f[0] }}">{{ f[1] }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <button class="btn btn-primary">Add Subject</button>
-    </form>
-
+    </div>
 </div>
+
+<script>
+function toggleComponents() {
+    const theoryChecked = document.getElementById('compTheory').checked;
+    const practicalChecked = document.getElementById('compPractical').checked;
+    const tutorialChecked = document.getElementById('compTutorial').checked;
+
+    document.getElementById('theoryConfigSection').style.display = theoryChecked ? 'block' : 'none';
+    document.getElementById('practicalConfigSection').style.display = practicalChecked ? 'block' : 'none';
+    document.getElementById('tutorialConfigSection').style.display = tutorialChecked ? 'block' : 'none';
+}
+
+document.addEventListener('DOMContentLoaded', toggleComponents);
+</script>
 
 {% endblock %}

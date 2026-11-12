@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center py-4">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-lg border-0 rounded-4 p-4 p-md-5">
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-primary-subtle text-primary rounded-circle mb-3" style="width: 65px; height: 65px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-mortarboard" viewBox="0 0 16 16">
+                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917zM8 8.46 1.758 5.965 8 3.052l6.242 2.913z"/>
+                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466zm-.068 1.873.22-.748 3.496 1.311a.5.5 0 0 0 .352 0l3.496-1.311.22.748L8 12.46z"/>
+                    </svg>
+                </div>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill text-uppercase fw-semibold mb-2">
+                    Student Enrollment
+                </span>
+                <h3 class="fw-bold mb-1">Student Registration</h3>
+                <p class="text-muted small">Register your academic profile to receive your personalized class &amp; lab batch schedule</p>
+            </div>
+
+            <form method="POST" action="/register/student" onsubmit="return validateStudentForm()">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-7">
+                        <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control rounded-3" placeholder="e.g. Sarah Jenkins" required autofocus>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold">Student ID / Roll No <span class="text-danger">*</span></label>
+                        <input type="text" name="username" class="form-control rounded-3" placeholder="e.g. 2024CS042" required>
+                        <div class="form-text small">Used as your login User ID.</div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Department <span class="text-danger">*</span></label>
+                        <select name="department" class="form-select rounded-3" required>
+                            <option value="">Select Department</option>
+                            <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Electronics & Telecommunication">Electronics &amp; Telecommunication</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="Textile Engineering">Textile Engineering</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Academic Year <span class="text-danger">*</span></label>
+                        <select name="academic_year" class="form-select rounded-3" required>
+                            <option value="FE">First Year (FE)</option>
+                            <option value="SE" selected>Second Year (SE)</option>
+                            <option value="TE">Third Year (TE)</option>
+                            <option value="BE">Final Year (BE)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Semester <span class="text-danger">*</span></label>
+                        <select name="semester" class="form-select rounded-3" required>
+                            <option value="Sem 1">Sem 1</option>
+                            <option value="Sem 2">Sem 2</option>
+                            <option value="Sem 3">Sem 3</option>
+                            <option value="Sem 4" selected>Sem 4</option>
+                            <option value="Sem 5">Sem 5</option>
+                            <option value="Sem 6">Sem 6</option>
+                            <option value="Sem 7">Sem 7</option>
+                            <option value="Sem 8">Sem 8</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Class / Division <span class="text-danger">*</span></label>
+                        <select name="class_name" class="form-select rounded-3" required>
+                            <option value="">Select Division</option>
+                            {% for c in classes %}
+                            <option value="{{ c.name }}" {% if c.name == 'SY-A' %}selected{% endif %}>{{ c.name }}</option>
+                            {% else %}
+                            <option value="SY-A" selected>SY-A</option>
+                            <option value="SY-B">SY-B</option>
+                            <option value="TY-A">TY-A</option>
+                            <option value="TY-B">TY-B</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Lab Batch <span class="text-danger">*</span></label>
+                        <select name="batch" class="form-select rounded-3" required>
+                            <option value="A1" selected>Batch A1</option>
+                            <option value="A2">Batch A2</option>
+                            <option value="A3">Batch A3</option>
+                            <option value="A4">Batch A4</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                        <input type="email" name="email" class="form-control rounded-3" placeholder="student@institution.edu" required>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="password" id="studentPass" name="password" class="form-control rounded-start-3" placeholder="Min 6 characters" minlength="6" required>
+                            <button class="btn btn-outline-secondary rounded-end-3" type="button" onclick="togglePass('studentPass', this)">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="password" id="studentConfirmPass" name="confirm_password" class="form-control rounded-start-3" placeholder="Re-enter password" minlength="6" required>
+                            <button class="btn btn-outline-secondary rounded-end-3" type="button" onclick="togglePass('studentConfirmPass', this)">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info border-0 rounded-3 small mb-4">
+                    <div class="d-flex gap-2">
+                        <span>ℹ️</span>
+                        <div>
+                            <strong>Verification Required:</strong> Your student account will be submitted for verification against institutional enrollment records before activation.
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-semibold shadow-sm mb-3">
+                    Submit Student Registration
+                </button>
+            </form>
+
+            <div class="text-center text-muted small mt-2">
+                Already registered?
+                <a href="/login" class="text-primary fw-semibold text-decoration-none">Sign In &rarr;</a>
+                &bull;
+                <a href="/register" class="text-secondary text-decoration-none">Change Role</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePass(id, btn) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+        input.type = "text";
+        btn.innerText = "🙈";
+    } else {
+        input.type = "password";
+        btn.innerText = "👁️";
+    }
+}
+
+function validateStudentForm() {
+    const p1 = document.getElementById("studentPass").value;
+    const p2 = document.getElementById("studentConfirmPass").value;
+    if (p1 !== p2) {
+        alert("Passwords do not match. Please re-enter identical passwords.");
+        return false;
+    }
+    return true;
+}
+</script>
+
+{% endblock %}

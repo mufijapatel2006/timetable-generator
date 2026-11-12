@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center py-4">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-lg border-0 rounded-4 p-4 p-md-5">
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-success-subtle text-success rounded-circle mb-3" style="width: 65px; height: 65px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-video3" viewBox="0 0 16 16">
+                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4.5A2.5 2.5 0 0 1 4.5 2h7A2.5 2.5 0 0 1 14 4.5M3 4.5V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5a1.5 1.5 0 0 0-1.5-1.5h-7A1.5 1.5 0 0 0 3 4.5"/>
+                        <path d="M8 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.5 1a2.5 2.5 0 0 0-2.5 2.5V12h5v-.5a2.5 2.5 0 0 0-2.5-2.5z"/>
+                    </svg>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill text-uppercase fw-semibold mb-2">
+                    Faculty Onboarding
+                </span>
+                <h3 class="fw-bold mb-1">Faculty Registration</h3>
+                <p class="text-muted small">Submit your details for official institutional verification and schedule allocation</p>
+            </div>
+
+            <form method="POST" action="/register/faculty" onsubmit="return validateFacultyForm()">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name" class="form-control rounded-3" placeholder="e.g. Dr. Robert Vance" required autofocus>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Faculty ID / Username <span class="text-danger">*</span></label>
+                        <input type="text" name="username" class="form-control rounded-3" placeholder="e.g. FAC105 or r_vance" required>
+                        <div class="form-text small">Used as your unique sign-in ID.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Department <span class="text-danger">*</span></label>
+                        <select name="department" class="form-select rounded-3" required>
+                            <option value="">Select Department</option>
+                            <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Electronics & Telecommunication">Electronics &amp; Telecommunication</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="Textile Engineering">Textile Engineering</option>
+                            <option value="General Science & Humanities">General Science &amp; Humanities</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Institutional Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" class="form-control rounded-3" placeholder="faculty@institution.edu" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Mobile Number</label>
+                        <input type="tel" name="phone" class="form-control rounded-3" placeholder="+91 98765 43210">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="password" id="facultyPass" name="password" class="form-control rounded-start-3" placeholder="Min 6 characters" minlength="6" required>
+                            <button class="btn btn-outline-secondary rounded-end-3" type="button" onclick="togglePass('facultyPass', this)">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="password" id="facultyConfirmPass" name="confirm_password" class="form-control rounded-start-3" placeholder="Re-enter password" minlength="6" required>
+                            <button class="btn btn-outline-secondary rounded-end-3" type="button" onclick="togglePass('facultyConfirmPass', this)">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info border-0 rounded-3 small mb-4">
+                    <div class="d-flex gap-2">
+                        <span>ℹ️</span>
+                        <div>
+                            <strong>Approval Notice:</strong> Upon registration, your profile is routed to the administrator. Once authorized, you will be notified and your account will be activated.
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100 rounded-3 fw-semibold shadow-sm mb-3">
+                    Submit Faculty Registration
+                </button>
+            </form>
+
+            <div class="text-center text-muted small mt-2">
+                Already registered?
+                <a href="/login" class="text-success fw-semibold text-decoration-none">Sign In &rarr;</a>
+                &bull;
+                <a href="/register" class="text-secondary text-decoration-none">Change Role</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePass(id, btn) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+        input.type = "text";
+        btn.innerText = "🙈";
+    } else {
+        input.type = "password";
+        btn.innerText = "👁️";
+    }
+}
+
+function validateFacultyForm() {
+    const p1 = document.getElementById("facultyPass").value;
+    const p2 = document.getElementById("facultyConfirmPass").value;
+    if (p1 !== p2) {
+        alert("Passwords do not match. Please re-enter identical passwords.");
+        return false;
+    }
+    return true;
+}
+</script>
+
+{% endblock %}

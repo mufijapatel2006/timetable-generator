@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 rounded-4 p-4">
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-success-subtle text-success rounded-circle mb-3" style="width: 65px; height: 65px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-video3" viewBox="0 0 16 16">
+                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4.5A2.5 2.5 0 0 1 4.5 2h7A2.5 2.5 0 0 1 14 4.5M3 4.5V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5a1.5 1.5 0 0 0-1.5-1.5h-7A1.5 1.5 0 0 0 3 4.5"/>
+                        <path d="M8 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.5 1a2.5 2.5 0 0 0-2.5 2.5V12h5v-.5a2.5 2.5 0 0 0-2.5-2.5z"/>
+                    </svg>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill text-uppercase fw-semibold mb-2">
+                    Faculty &amp; Teacher Access
+                </span>
+                <h3 class="fw-bold mb-1">Teacher Portal Sign In</h3>
+                <p class="text-muted small">View personalized weekly lectures, assigned lab batches &amp; classrooms</p>
+            </div>
+
+            <!-- TEACHER DIRECT SELECTOR -->
+            {% if faculty_list %}
+            <div class="card bg-success-subtle border-0 rounded-3 p-3 mb-3">
+                <label class="form-label small fw-bold text-success text-uppercase mb-1">
+                    👨‍🏫 Faculty Member Quick Select
+                </label>
+                <select id="teacherSelect" class="form-select form-select-sm" onchange="autoFillTeacher()">
+                    <option value="">-- Click here to select your name --</option>
+                    {% for f in faculty_list %}
+                    <option value="teacher{{ f.id }}">{{ f.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-text small text-muted">Select your name to autofill your credentials automatically.</div>
+            </div>
+            {% endif %}
+
+            <form method="POST" action="/teacher/login">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Faculty Username / Name</label>
+                    <input type="text" id="usernameInput" name="username" class="form-control form-control-lg rounded-3" placeholder="Enter username (e.g. teacher1) or name" required autofocus>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Password</label>
+                    <input type="password" id="passwordInput" name="password" class="form-control form-control-lg rounded-3" placeholder="Enter password" required>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100 rounded-3 shadow-sm mb-3">
+                    Sign In to Teacher Portal
+                </button>
+            </form>
+
+            <div class="alert alert-success-subtle border-0 rounded-3 small mt-2">
+                <div class="fw-bold mb-1">👨‍🏫 Faculty Credentials:</div>
+                <div class="text-muted">Username: <code>teacher1</code> to <code>teacher14</code> (or faculty name) &bull; Password: <code>teacher123</code></div>
+            </div>
+
+            <hr class="my-3 text-muted">
+
+            <div class="text-center small text-muted">
+                Need a different portal?
+                <div class="mt-2 d-flex justify-content-center gap-3">
+                    <a href="/admin/login" class="text-decoration-none text-danger fw-semibold">🛡️ Admin Login</a>
+                    <span>&bull;</span>
+                    <a href="/student/login" class="text-decoration-none text-primary fw-semibold">🎓 Student Login</a>
+                    <span>&bull;</span>
+                    <a href="/login" class="text-decoration-none text-secondary">All Portals</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function autoFillTeacher() {
+    const sel = document.getElementById("teacherSelect");
+    if (sel && sel.value) {
+        document.getElementById("usernameInput").value = sel.value;
+        document.getElementById("passwordInput").value = "teacher123";
+    }
+}
+</script>
+
+{% endblock %}

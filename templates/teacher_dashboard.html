@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <h2 class="fw-bold mb-0">Teacher Portal</h2>
+            {% if published_doc %}
+                <span class="badge bg-success-subtle text-success border border-success px-3 py-1 rounded-pill">
+                    <i class="bi bi-check2-circle me-1"></i>Published Schedule v{{ published_doc.version }}
+                </span>
+            {% else %}
+                <span class="badge bg-warning-subtle text-warning border border-warning px-3 py-1 rounded-pill">
+                    No Schedule Published
+                </span>
+            {% endif %}
+        </div>
+        <p class="text-muted mb-0">Personalized Weekly Schedule for <strong>{{ current_faculty.name }}</strong></p>
+    </div>
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <form method="GET" action="/teacher/dashboard" class="d-flex align-items-center gap-2">
+            <label class="text-muted small fw-semibold text-nowrap d-none d-md-inline">Faculty Member:</label>
+            <select name="faculty_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                {% for f in faculty_list %}
+                <option value="{{ f.id }}" {% if f.id == current_faculty.id %}selected{% endif %}>
+                    {{ f.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </form>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#facultyProfileModal">
+            👤 My Profile
+        </button>
+        <button onclick="window.print()" class="btn btn-outline-dark btn-sm">
+            Print Schedule
+        </button>
+    </div>
+</div>
+
+<!-- ANNOUNCEMENTS & TIMETABLE UPDATES BANNER -->
+<div class="alert alert-primary-subtle border-0 shadow-sm rounded-4 mb-4 p-3 d-flex align-items-start gap-3">
+    <div class="fs-4 text-primary">📢</div>
+    <div class="flex-grow-1">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <h6 class="fw-bold text-primary mb-1">
+                Institutional Timetable Announcement &bull; Version {{ published_doc.version or '1.0' }}
+            </h6>
+            <span class="badge bg-primary rounded-pill small">Official &amp; Verified</span>
+        </div>
+        <p class="small text-muted mb-0">
+            {{ published_doc.description or 'Academic timetable published by the Dean of Academics. All lectures and laboratory practicals must strictly proceed in assigned halls. Modifications are restricted to the administration.' }}
+            {% if published_doc.published_at %}&bull; <span class="fw-semibold">Published: {{ published_doc.published_at }}</span>{% endif %}
+        </p>
+    </div>
+</div>
+
+<!-- FACULTY PROFILE MODAL -->
+<div class="modal fade" id="facultyProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold">Faculty Profile &amp; Account</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-success-subtle text-success rounded-circle mb-2" style="width: 70px; height: 70px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold mb-0">{{ current_faculty.name }}</h5>
+                    <span class="badge bg-success-subtle text-success border border-success rounded-pill px-3 py-1 mt-1">
+                        Active Faculty Member
+                    </span>
+                </div>
+
+                <ul class="list-group list-group-flush rounded-3 small">
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Faculty ID:</span>
+                        <span class="fw-bold">FAC-{{ "%03d"|format(current_faculty.id) }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Username:</span>
+                        <span class="fw-bold">{{ session.get('username') or ('teacher' ~ current_faculty.id) }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Department:</span>
+                        <span class="fw-bold">{{ session.get('department') or 'Computer Science & Engineering' }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Institutional Email:</span>
+                        <span class="fw-bold">{{ session.get('email') or (current_faculty.name|lower|replace(' ', '.') ~ '@institution.edu') }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Weekly Teaching Load:</span>
+                        <span class="fw-bold text-success">{{ lecture_count + practical_count }} Hours / Week</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Schedule Access:</span>
+                        <span class="badge bg-secondary">Read-Only (Verified)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SUBJECTS PORTFOLIO & WORKLOAD -->
+<div class="card shadow-sm border-0 rounded-4 p-3 mb-4 bg-white">
+    <div class="row align-items-center">
+        <div class="col-md-3 border-end">
+            <span class="text-muted small text-uppercase fw-semibold">Faculty Name</span>
+            <h5 class="fw-bold text-primary mb-1">{{ current_faculty.name }}</h5>
+            <div class="d-flex gap-1 mt-1">
+                <span class="badge bg-primary-subtle text-primary border border-primary">{{ lecture_count }} Lectures</span>
+                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">{{ practical_count }} Labs</span>
+                <span class="badge bg-dark text-white">{{ lecture_count + practical_count }} Total Hrs</span>
+            </div>
+        </div>
+        <div class="col-md-9 ps-md-4 mt-2 mt-md-0">
+            <span class="text-muted small text-uppercase fw-semibold">Assigned Subjects:</span>
+            <div class="d-flex flex-wrap gap-2 mt-1">
+                {% for sub in my_subjects %}
+                <span class="badge {% if sub.type == 'Practical' %}bg-warning text-dark{% else %}bg-primary{% endif %} px-3 py-2 rounded-pill">
+                    {{ sub.name }} ({{ sub.type }} - {{ sub.hours }} hrs)
+                </span>
+                {% else %}
+                <span class="text-muted small">No subjects assigned in curriculum</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TEACHER TIMETABLE GRID -->
+<div class="card shadow border-0 rounded-4 overflow-hidden mb-5 print-sheet">
+    <!-- OFFICIAL INSTITUTIONAL PRINT HEADER -->
+    <div class="print-header d-none d-print-block px-3 pt-3">
+        <h2 class="print-institution">Smart Timetable Management System</h2>
+        <div class="print-title">Faculty Weekly Teaching Schedule &bull; Classroom &amp; Lab Allocations</div>
+        <div class="print-meta">
+            <span><strong>Faculty Name:</strong> {{ current_faculty.name }}</span>
+            <span><strong>Academic Year:</strong> 2026&ndash;2027</span>
+            <span><strong>Workload:</strong> {{ lecture_count }} Lectures &bull; {{ practical_count }} Labs ({{ lecture_count + practical_count }} Hrs)</span>
+            <span><strong>Schedule Status:</strong> v{{ published_doc.version or '1.0' }} (Official)</span>
+        </div>
+    </div>
+
+    <div class="card-header bg-dark text-white py-3">
+        <h5 class="mb-0 fw-bold">Weekly Schedule Matrix</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mb-0">
+                <thead class="table-secondary">
+                    <tr>
+                        <th style="width: 12%;">Day</th>
+                        <th style="width: 14.6%;">Period 1</th>
+                        <th style="width: 14.6%;">Period 2</th>
+                        <th style="width: 14.6%;">Period 3</th>
+                        <th style="width: 14.6%;">Period 4</th>
+                        <th style="width: 14.6%;">Period 5</th>
+                        <th style="width: 14.6%;">Period 6</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set days_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+                    {% for day_idx in range(5) %}
+                    <tr>
+                        <td class="fw-bold bg-light text-start ps-3">{{ days_names[day_idx] }}</td>
+                        {% for p_idx in range(6) %}
+                        {% set events = schedule[day_idx][p_idx] %}
+                        <td class="p-2 {% if events %}bg-white{% else %}bg-light text-muted{% endif %}" style="height: 90px; vertical-align: middle;">
+                            {% if events %}
+                                {% for ev in events %}
+                                <div class="p-1 mb-1 rounded small {% if ev.type == 'Practical' %}bg-warning-subtle text-warning-emphasis border border-warning{% else %}bg-primary-subtle text-primary-emphasis border border-primary{% endif %}">
+                                    <div class="fw-bold">{{ ev.class }}</div>
+                                    <div style="font-size: 0.8rem;">{{ ev.text | safe }}</div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted small" style="opacity: 0.5;">- Free -</span>
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- OFFICIAL INSTITUTIONAL PRINT SIGNATURE BLOCK -->
+        <div class="print-signatures d-none d-print-flex px-3 pb-2">
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Faculty Signature</div>
+                <div class="print-signature-subtitle">{{ current_faculty.name }}</div>
+            </div>
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Verified By</div>
+                <div class="print-signature-subtitle">Head of Department (H.O.D.)</div>
+            </div>
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Approved By</div>
+                <div class="print-signature-subtitle">Dean Academics / Principal</div>
+            </div>
+        </div>
+        <div class="print-footer-note d-none d-print-block">
+            Generated via Smart Timetable Management System &bull; Faculty: {{ current_faculty.name }} &bull; Total Load: {{ lecture_count + practical_count }} Hrs/Week
+        </div>
+    </div>
+</div>
+
+{% endblock %}

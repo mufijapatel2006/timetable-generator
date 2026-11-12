@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <h2 class="fw-bold mb-0">Registration Approval Portal</h2>
+            {% if pending_users %}
+            <span class="badge bg-warning text-dark px-3 py-1 rounded-pill">
+                {{ pending_users|length }} Pending Review
+            </span>
+            {% else %}
+            <span class="badge bg-success-subtle text-success border border-success px-3 py-1 rounded-pill">
+                All Requests Handled
+            </span>
+            {% endif %}
+        </div>
+        <p class="text-muted mb-0">Authorize or reject newly registered Faculty and Student accounts</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="/admin/users" class="btn btn-outline-secondary">User Accounts</a>
+        <a href="/admin/dashboard" class="btn btn-primary">Admin Dashboard</a>
+    </div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Pending Approvals</span>
+                    <h3 class="fw-bold text-warning-emphasis mb-0">{{ pending_users|length }}</h3>
+                </div>
+                <div class="bg-warning-subtle text-warning-emphasis rounded-circle p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.084-.51l.995.106a8 8 0 0 1-.119.728l-.96-.324"/>
+                        <path d="M7 3h2v5.586l3.293 3.293-1.414 1.414L7 9.414z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Active Accounts</span>
+                    <h3 class="fw-bold text-success mb-0">{{ active_count }}</h3>
+                </div>
+                <div class="bg-success-subtle text-success rounded-circle p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted small text-uppercase fw-semibold">Total Registered</span>
+                    <h3 class="fw-bold text-dark mb-0">{{ all_users|length }}</h3>
+                </div>
+                <div class="bg-primary-subtle text-primary rounded-circle p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PENDING REGISTRATIONS TABLE -->
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Pending Review Queue ({{ pending_users|length }})</h5>
+        <span class="text-muted small">Action required for activation</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Role</th>
+                    <th>Full Name</th>
+                    <th>User ID / Roll No</th>
+                    <th>Department</th>
+                    <th>Division / Batch</th>
+                    <th>Email &amp; Mobile</th>
+                    <th>Registered At</th>
+                    <th class="text-end">Verification Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in pending_users %}
+                <tr>
+                    <td>
+                        {% if u.role == 'teacher' %}
+                            <span class="badge bg-success-subtle text-success border border-success">Faculty</span>
+                        {% else %}
+                            <span class="badge bg-primary-subtle text-primary border border-primary">Student</span>
+                        {% endif %}
+                    </td>
+                    <td class="fw-bold">{{ u.name }}</td>
+                    <td><code>{{ u.username }}</code></td>
+                    <td>{{ u.department or 'General' }}</td>
+                    <td>
+                        {% if u.class_name %}
+                            <span class="badge bg-light text-dark border">{{ u.class_name }}</span>
+                            {% if u.batch %}<span class="badge bg-light text-dark border">Batch {{ u.batch }}</span>{% endif %}
+                        {% else %}
+                            <span class="text-muted small">N/A (Faculty)</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="small fw-semibold">{{ u.email or 'No email' }}</div>
+                        {% if u.phone %}<div class="text-muted small">{{ u.phone }}</div>{% endif %}
+                    </td>
+                    <td class="small text-muted">{{ u.registered_at or 'Recently' }}</td>
+                    <td class="text-end">
+                        <div class="btn-group" role="group">
+                            <form method="POST" action="/admin/approve_user/{{ u.username }}" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success rounded-start-pill px-3">
+                                    Approve
+                                </button>
+                            </form>
+                            <form method="POST" action="/admin/reject_user/{{ u.username }}" class="d-inline" onsubmit="return confirm('Are you sure you want to reject this registration?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-end-pill px-3">
+                                    Reject
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center py-5 text-muted">
+                        <div class="fs-4 mb-2">🎉</div>
+                        <strong>No pending registration requests!</strong>
+                        <div class="small mt-1">All new faculty and student accounts have been reviewed and activated.</div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ALL USER STATUS OVERVIEW -->
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-5">
+    <div class="card-header bg-light py-3">
+        <h6 class="mb-0 fw-bold text-muted text-uppercase small">Recent Registrations &amp; Approved Accounts</h6>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0">
+            <thead class="table-light small">
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Registered</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in all_users %}
+                {% if u.role != 'admin' %}
+                <tr class="small">
+                    <td><code>{{ u.username }}</code></td>
+                    <td>{{ u.name }}</td>
+                    <td>
+                        {% if u.role == 'teacher' %}<span class="badge bg-success-subtle text-success">Teacher</span>
+                        {% else %}<span class="badge bg-primary-subtle text-primary">Student</span>{% endif %}
+                    </td>
+                    <td>{{ u.department or '-' }}</td>
+                    <td>
+                        {% if u.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% elif u.status == 'rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% else %}
+                            <span class="badge bg-success">Active</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-muted">{{ u.registered_at or 'Seeded' }}</td>
+                    <td class="text-end">
+                        {% if u.status == 'pending' %}
+                        <form method="POST" action="/admin/approve_user/{{ u.username }}" class="d-inline">
+                            <button type="submit" class="btn btn-xs btn-outline-success py-0 px-2 rounded-pill">Approve</button>
+                        </form>
+                        {% endif %}
+                        <button onclick="confirmDelete('/admin/delete_user/{{ u.username }}')" class="btn btn-xs btn-outline-danger py-0 px-2 rounded-pill">Delete</button>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

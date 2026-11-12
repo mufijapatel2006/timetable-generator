@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1"><i class="bi bi-cpu text-primary me-2"></i>Laboratory &amp; Practical Management</h2>
+        <p class="text-muted mb-0">Manage facilities, equipment profiles, subject compatibility, maintenance schedules, and utilization.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="/admin/labs/add" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-circle me-1"></i>Add Laboratory
+        </a>
+        <a href="/admin/labs/utilization" class="btn btn-outline-success shadow-sm">
+            <i class="bi bi-graph-up me-1"></i>Utilization Analytics
+        </a>
+        <a href="/admin/allocations" class="btn btn-outline-primary shadow-sm">
+            <i class="bi bi-diagram-3 me-1"></i>Batch Allocations
+        </a>
+        <a href="/admin/rooms_timetable" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-calendar3 me-1"></i>Room Schedules
+        </a>
+    </div>
+</div>
+
+<!-- KPI SUMMARY METRICS -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-bold">Active Laboratories</span>
+                    <h3 class="fw-bold text-primary mb-0 mt-1">{{ summary.total_labs|default(labs|length) }}</h3>
+                </div>
+                <div class="p-3 bg-primary-subtle text-primary rounded-circle fs-4">
+                    <i class="bi bi-pc-display-horizontal"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">Compatible for multi-batch practicals</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-bold">Operating Capacity</span>
+                    <h3 class="fw-bold text-info mb-0 mt-1">{{ summary.total_operating_capacity|default(0) }} <span class="fs-6 fw-normal text-muted">hrs/wk</span></h3>
+                </div>
+                <div class="p-3 bg-info-subtle text-info rounded-circle fs-4">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">Net hours after maintenance downtime</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-bold">Scheduled Practical Hours</span>
+                    <h3 class="fw-bold text-success mb-0 mt-1">{{ summary.total_booked_hours|default(0) }} <span class="fs-6 fw-normal text-muted">hrs/wk</span></h3>
+                </div>
+                <div class="p-3 bg-success-subtle text-success rounded-circle fs-4">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">Active curriculum bookings</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small text-uppercase fw-bold">Average Utilization</span>
+                    <h3 class="fw-bold text-warning mb-0 mt-1">{{ summary.average_utilization|default(0) }}%</h3>
+                </div>
+                <div class="p-3 bg-warning-subtle text-warning rounded-circle fs-4">
+                    <i class="bi bi-speedometer2"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">
+                <span class="badge bg-success-subtle text-success me-1">{{ summary.optimal_count|default(0) }} Optimal</span>
+                <span class="badge bg-warning-subtle text-warning">{{ summary.high_load_count|default(0) }} High Load</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SEARCH & FILTER TOOLBAR -->
+<div class="card shadow-sm border-0 rounded-4 p-3 mb-4 bg-white">
+    <div class="row g-2 align-items-center">
+        <div class="col-md-6 col-12">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                <input type="text" id="labSearchInput" class="form-control bg-light border-0" placeholder="Search by laboratory code, name, department, equipment, or subject...">
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <select id="departmentFilter" class="form-select bg-light border-0">
+                <option value="">All Departments</option>
+                <option value="Computer Science">Computer Science &amp; Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics">Electronics &amp; Telecommunication</option>
+                <option value="Mechanical">Mechanical Engineering</option>
+            </select>
+        </div>
+        <div class="col-md-3 col-sm-6 text-end">
+            <span class="text-muted small">Showing <strong id="visibleLabCount">{{ labs|length }}</strong> laboratories</span>
+        </div>
+    </div>
+</div>
+
+<!-- LABORATORIES DIRECTORY TABLE -->
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white mb-5">
+    <div class="card-header bg-white py-3 px-4 border-0 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0">Laboratory Facilities &amp; Compatibility Directory</h5>
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">
+            {{ labs|length }} Labs Configured
+        </span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="labsTable">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Code &amp; Facility Name</th>
+                    <th>Department</th>
+                    <th class="text-center">Capacity</th>
+                    <th>Equipment &amp; Hardware Profile</th>
+                    <th>Compatible Subjects</th>
+                    <th class="text-center">Maintenance</th>
+                    <th class="text-center">Utilization</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lab in labs %}
+                {% set udata = util_map.get(lab.id, {}) %}
+                <tr class="lab-row" data-name="{{ lab.name|lower }}" data-code="{{ lab.code|lower }}" data-dept="{{ lab.department|lower }}" data-equip="{{ lab.equipment|join(' ')|lower }}" data-subs="{{ lab.supported_subjects|join(' ')|lower }}">
+                    <td class="ps-4">
+                        <div class="fw-bold text-dark fs-6">{{ lab.name }}</div>
+                        <span class="badge bg-dark-subtle text-dark border px-2 py-0.5 rounded-pill font-monospace small">
+                            {{ lab.code }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="small text-muted">{{ lab.department }}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge bg-light text-dark border px-2 py-1 fs-6">
+                            <i class="bi bi-people me-1"></i>{{ lab.capacity }}
+                        </span>
+                        <div class="small text-muted" style="font-size: 0.72rem;">students</div>
+                    </td>
+                    <td style="max-width: 260px;">
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for eq in lab.equipment %}
+                            <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-2 py-0.5 rounded-pill small" style="font-size: 0.72rem;">
+                                {{ eq }}
+                            </span>
+                            {% else %}
+                            <span class="text-muted small fst-italic">Standard Workstations</span>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td style="max-width: 240px;">
+                        <div class="d-flex flex-wrap gap-1">
+                            {% if lab.supported_subjects %}
+                                {% for sid in lab.supported_subjects %}
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-0.5 rounded-pill small" style="font-size: 0.72rem;">
+                                    {{ subjects_map.get(sid, 'Subject #' ~ sid) }}
+                                </span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-0.5 rounded-pill small" style="font-size: 0.72rem;">
+                                    All Compatible Practicals
+                                </span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        {% set m_count = lab.available_slots|length %}
+                        {% if m_count > 0 %}
+                        <a href="/admin/labs/{{ lab.id }}/availability" class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill text-decoration-none" title="Click to view or edit maintenance schedule">
+                            <i class="bi bi-tools me-1"></i>{{ m_count }} slots
+                        </a>
+                        {% else %}
+                        <a href="/admin/labs/{{ lab.id }}/availability" class="badge bg-light text-muted border px-2 py-1 rounded-pill text-decoration-none" title="No maintenance scheduled">
+                            Full Availability
+                        </a>
+                        {% endif %}
+                    </td>
+                    <td class="text-center" style="min-width: 130px;">
+                        {% set util = udata.get('utilization', 0) %}
+                        {% set status = udata.get('status', 'Underutilized') %}
+                        <div class="d-flex justify-content-between align-items-center small mb-1">
+                            <span class="fw-bold">{{ util }}%</span>
+                            {% if status == 'High Load' %}
+                            <span class="badge bg-danger text-white rounded-pill" style="font-size: 0.68rem;">High Load</span>
+                            {% elif status == 'Optimal' %}
+                            <span class="badge bg-success text-white rounded-pill" style="font-size: 0.68rem;">Optimal</span>
+                            {% elif status == 'Maintenance Heavy' %}
+                            <span class="badge bg-warning text-dark rounded-pill" style="font-size: 0.68rem;">Downtime</span>
+                            {% else %}
+                            <span class="badge bg-info text-dark rounded-pill" style="font-size: 0.68rem;">Available</span>
+                            {% endif %}
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar {% if util >= 75 %}bg-danger{% elif util >= 30 %}bg-success{% else %}bg-info{% endif %}" role="progressbar" style="width: {{ util }}%;" aria-valuenow="{{ util }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="text-muted" style="font-size: 0.7rem; margin-top: 2px;">
+                            {{ udata.get('booked_hours', 0) }} / {{ udata.get('operating_capacity', 30) }} hrs
+                        </div>
+                    </td>
+                    <td class="text-end pe-4">
+                        <div class="btn-group btn-group-sm">
+                            <a href="/admin/labs/edit/{{ lab.id }}" class="btn btn-outline-secondary" title="Edit Laboratory Profile">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="/admin/labs/{{ lab.id }}/availability" class="btn btn-outline-warning text-dark" title="Manage Maintenance & Downtime">
+                                <i class="bi bi-wrench-adjustable"></i>
+                            </a>
+                            <a href="/admin/rooms_timetable?room={{ lab.name|urlencode }}" class="btn btn-outline-primary" title="View Weekly Timetable">
+                                <i class="bi bi-calendar3"></i>
+                            </a>
+                            <a href="/admin/labs/delete/{{ lab.id }}" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete laboratory {{ lab.name }}?');" title="Delete Laboratory">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center py-5 text-muted">
+                        <i class="bi bi-pc-display fs-1 d-block mb-3 text-secondary"></i>
+                        <h5>No Laboratories Found</h5>
+                        <p class="small">Add your institution's computer laboratories to configure practical allocations.</p>
+                        <a href="/admin/labs/add" class="btn btn-primary btn-sm rounded-pill px-4 mt-2">
+                            <i class="bi bi-plus-circle me-1"></i>Add Laboratory
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("labSearchInput");
+    const deptFilter = document.getElementById("departmentFilter");
+    const rows = document.querySelectorAll(".lab-row");
+    const visibleCount = document.getElementById("visibleLabCount");
+
+    function filterTable() {
+        const query = searchInput.value.toLowerCase().trim();
+        const dept = deptFilter.value.toLowerCase().trim();
+        let visible = 0;
+
+        rows.forEach(row => {
+            const name = row.getAttribute("data-name") || "";
+            const code = row.getAttribute("data-code") || "";
+            const rowDept = row.getAttribute("data-dept") || "";
+            const equip = row.getAttribute("data-equip") || "";
+            const subs = row.getAttribute("data-subs") || "";
+
+            const matchesSearch = !query || name.includes(query) || code.includes(query) || rowDept.includes(query) || equip.includes(query) || subs.includes(query);
+            const matchesDept = !dept || rowDept.includes(dept);
+
+            if (matchesSearch && matchesDept) {
+                row.style.display = "";
+                visible++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        if (visibleCount) {
+            visibleCount.textContent = visible;
+        }
+    }
+
+    if (searchInput) searchInput.addEventListener("input", filterTable);
+    if (deptFilter) deptFilter.addEventListener("change", filterTable);
+});
+</script>
+
+{% endblock %}

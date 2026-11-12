@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-3" style="max-width: 900px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-pc-display-horizontal text-primary me-2"></i>
+                {% if is_edit %}Edit Laboratory Profile{% else %}Register New Laboratory{% endif %}
+            </h2>
+            <p class="text-muted mb-0">Configure facility hardware profile, student capacity, and subject compatibility mappings.</p>
+        </div>
+        <a href="/admin/labs" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Laboratories
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white mb-5">
+        <div class="card-header bg-white py-3 px-4 border-0 border-bottom">
+            <span class="fw-bold text-dark fs-5">
+                {% if is_edit %}Updating: {{ lab.name }} ({{ lab.code }}){% else %}Facility Details &amp; Hardware Specification{% endif %}
+            </span>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST" action="{% if is_edit %}/admin/labs/edit/{{ lab.id }}{% else %}/admin/labs/add{% endif %}">
+                
+                <!-- ROW 1: NAME & UNIQUE CODE -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-7 col-12">
+                        <label class="form-label fw-bold small text-uppercase">Laboratory Facility Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control form-control-lg bg-light border-0" placeholder="e.g. Advanced AI & Cloud Computing Lab" value="{% if is_edit %}{{ lab.name }}{% endif %}" required>
+                        <div class="form-text small">Full official name as it appears in institutional schedules.</div>
+                    </div>
+                    <div class="col-md-5 col-12">
+                        <label class="form-label fw-bold small text-uppercase">Unique Facility Code <span class="text-danger">*</span></label>
+                        <input type="text" name="code" class="form-control form-control-lg bg-light border-0 font-monospace" placeholder="e.g. LAB-CS-101" value="{% if is_edit %}{{ lab.code }}{% endif %}" required>
+                        <div class="form-text small">Unique room identifier (e.g. LAB-01, LAB-CS-202).</div>
+                    </div>
+                </div>
+
+                <!-- ROW 2: DEPARTMENT & STUDENT CAPACITY -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-7 col-12">
+                        <label class="form-label fw-bold small text-uppercase">Department <span class="text-danger">*</span></label>
+                        <select name="department" class="form-select form-select-lg bg-light border-0" required>
+                            {% set current_dept = lab.department if is_edit else 'Computer Science & Engineering' %}
+                            <option value="Computer Science & Engineering" {% if current_dept == 'Computer Science & Engineering' %}selected{% endif %}>Computer Science &amp; Engineering</option>
+                            <option value="Information Technology" {% if current_dept == 'Information Technology' %}selected{% endif %}>Information Technology</option>
+                            <option value="Electronics & Telecommunication" {% if current_dept == 'Electronics & Telecommunication' %}selected{% endif %}>Electronics &amp; Telecommunication</option>
+                            <option value="Mechanical Engineering" {% if current_dept == 'Mechanical Engineering' %}selected{% endif %}>Mechanical Engineering</option>
+                            <option value="General Science & Humanities" {% if current_dept == 'General Science & Humanities' %}selected{% endif %}>General Science &amp; Humanities</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5 col-12">
+                        <label class="form-label fw-bold small text-uppercase">Student Workstation Capacity <span class="text-danger">*</span></label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-people"></i></span>
+                            <input type="number" name="capacity" class="form-control bg-light border-0" min="1" max="120" value="{% if is_edit %}{{ lab.capacity }}{% else %}30{% endif %}" required>
+                            <span class="input-group-text bg-light border-0">students</span>
+                        </div>
+                        <div class="form-text small">Maximum simultaneous batch headcount.</div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: HARDWARE & EQUIPMENT PROFILE -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-uppercase mb-2">Available Equipment &amp; Hardware Specification</label>
+                    <p class="text-muted small mb-3">The scheduler ensures subjects requiring specific hardware are only placed in matching facilities.</p>
+                    
+                    {% set lab_equip = lab.equipment if is_edit else [] %}
+                    <div class="row g-2 mb-3">
+                        {% set standard_equipment = [
+                            "High-Performance Workstations",
+                            "Dedicated GPU (RTX / Tensor)",
+                            "High-Speed Gigabit LAN",
+                            "Linux OS & Compilers",
+                            "Embedded Systems & IoT Kits",
+                            "Cisco Routers & Switching Racks",
+                            "Database Server Node",
+                            "AV Projector & Smart Screen"
+                        ] %}
+                        {% for eq in standard_equipment %}
+                        <div class="col-md-6 col-12">
+                            <div class="p-2 border rounded-3 bg-light d-flex align-items-center gap-2">
+                                <input class="form-check-input mt-0" type="checkbox" name="equipment" value="{{ eq }}" id="eq_{{ loop.index }}" {% if eq in lab_equip %}checked{% endif %}>
+                                <label class="form-check-label small fw-semibold cursor-pointer w-100" for="eq_{{ loop.index }}">
+                                    {{ eq }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <label class="form-label small text-muted">Additional / Specialized Equipment (Comma-separated)</label>
+                    <input type="text" name="custom_equipment" class="form-control bg-light border-0" placeholder="e.g. Logic Analyzers, FPGA Boards, VR Headsets" value="{% if is_edit %}{% for eq in lab_equip %}{% if eq not in standard_equipment %}{{ eq }}, {% endif %}{% endfor %}{% endif %}">
+                </div>
+
+                <!-- SECTION 4: COMPATIBLE SUBJECTS -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-uppercase mb-2">Compatible Subject Practicals</label>
+                    <p class="text-muted small mb-3">Restrict this laboratory to specific subjects, or leave all unchecked to make it universally available for any compatible practicals.</p>
+
+                    {% set lab_subs = lab.supported_subjects if is_edit else [] %}
+                    <div class="card border rounded-3 p-3 bg-light" style="max-height: 250px; overflow-y: auto;">
+                        <div class="row g-2">
+                            {% for sub in subjects %}
+                            <div class="col-md-6 col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="supported_subjects" value="{{ sub.id }}" id="sub_{{ sub.id }}" {% if sub.id in lab_subs %}checked{% endif %}>
+                                    <label class="form-check-label small" for="sub_{{ sub.id }}">
+                                        <strong>{{ sub.name }}</strong>
+                                        <span class="text-muted">({{ sub.type }})</span>
+                                    </label>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-muted small p-2">No subjects found.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a href="/admin/labs" class="btn btn-light px-4">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-5 fw-semibold shadow-sm">
+                        <i class="bi bi-check-circle me-1"></i>{% if is_edit %}Save Changes{% else %}Create Laboratory{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

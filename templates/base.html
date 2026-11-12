@@ -1,26 +1,344 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Timetable System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Smart Timetable Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --stms-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --stms-primary: #0d6efd;
+            --stms-dark: #1e293b;
+            --stms-bg: #f8fafc;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        html, body {
+            font-family: var(--stms-font);
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+            background-color: #f8fafc;
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Mobile-fit container and spacing */
+        .container, .container-fluid {
+            width: 100%;
+            max-width: 100%;
+            padding-left: clamp(12px, 2.5vw, 24px);
+            padding-right: clamp(12px, 2.5vw, 24px);
+        }
+        .table-responsive {
+            -webkit-overflow-scrolling: touch;
+            border-radius: 0.75rem;
+        }
+        .card {
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .btn, .form-control, .form-select {
+            border-radius: 0.5rem;
+        }
+        /* Touch target improvements for mobile */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 0.95rem !important;
+                white-space: normal;
+            }
+            .table th, .table td {
+                padding: 0.4rem 0.3rem !important;
+                font-size: 0.78rem !important;
+            }
+            h2 {
+                font-size: 1.4rem !important;
+            }
+            h4 {
+                font-size: 1.15rem !important;
+            }
+            .card {
+                padding: 1rem !important;
+            }
+        }
+
+        /* =========================================================
+           STANDARD OFFICIAL INSTITUTIONAL PRINT FORMAT
+           ========================================================= */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 8mm 8mm 8mm 8mm;
+            }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-size: 8.5pt !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            /* Hide all application chrome, navigation, buttons, and popups */
+            nav, .navbar, footer, .btn, .btn-group, .modal, .toast,
+            form:not(.print-include), .no-print, .d-print-none,
+            .position-fixed, button, .alert:not(.print-alert),
+            .card-header .btn, .nav-tabs {
+                display: none !important;
+            }
+            .container, .container-fluid {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: transparent !important;
+            }
+            .card-header {
+                display: none !important;
+            }
+            .card-body {
+                padding: 0 !important;
+            }
+            .table-responsive {
+                overflow: visible !important;
+            }
+            /* Official Standard Timetable Grid */
+            table.table {
+                width: 100% !important;
+                table-layout: fixed !important;
+                border-collapse: collapse !important;
+                border: 2px solid #000000 !important;
+                margin-bottom: 12px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            table.table th, table.table td {
+                border: 1.5px solid #222222 !important;
+                padding: 5px 3px !important;
+                text-align: center !important;
+                vertical-align: middle !important;
+                color: #000000 !important;
+                font-size: 8pt !important;
+                line-height: 1.25 !important;
+                background-color: transparent !important;
+                word-break: break-word !important;
+            }
+            table.table thead th {
+                background-color: #f1f5f9 !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+                font-size: 8pt !important;
+                text-transform: uppercase !important;
+                border-bottom: 2px solid #000000 !important;
+            }
+            table.table td .badge {
+                border: 1px solid #444 !important;
+                color: #000 !important;
+                background-color: #f8fafc !important;
+                font-size: 7pt !important;
+                padding: 1px 3px !important;
+                font-weight: 600 !important;
+            }
+            table.table td .bg-warning-subtle,
+            table.table td .bg-primary-subtle,
+            table.table td .bg-light {
+                background-color: #ffffff !important;
+                border: 1px dashed #666 !important;
+                box-shadow: none !important;
+            }
+            /* Official Institutional Printable Header */
+            .print-header {
+                display: block !important;
+                border-bottom: 2.5px solid #000000 !important;
+                padding-bottom: 6px !important;
+                margin-bottom: 10px !important;
+                text-align: center !important;
+            }
+            .print-header .print-institution {
+                font-size: 14pt !important;
+                font-weight: 800 !important;
+                letter-spacing: 0.5px !important;
+                text-transform: uppercase !important;
+                color: #000000 !important;
+                margin: 0 !important;
+            }
+            .print-header .print-title {
+                font-size: 11pt !important;
+                font-weight: 700 !important;
+                color: #222222 !important;
+                margin: 2px 0 0 0 !important;
+            }
+            .print-header .print-meta {
+                display: flex !important;
+                justify-content: space-between !important;
+                font-size: 8.5pt !important;
+                font-weight: 600 !important;
+                margin-top: 6px !important;
+                padding-top: 4px !important;
+                border-top: 1px dashed #666 !important;
+                color: #111111 !important;
+            }
+            /* Official 3-Signatory Authority Block */
+            .print-signatures {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: flex-end !important;
+                margin-top: 24px !important;
+                padding-top: 18px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .print-signature-box {
+                width: 28% !important;
+                text-align: center !important;
+            }
+            .print-signature-line {
+                border-top: 1.5px solid #000000 !important;
+                margin-bottom: 4px !important;
+                width: 100% !important;
+            }
+            .print-signature-title {
+                font-size: 8.5pt !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                color: #000000 !important;
+            }
+            .print-signature-subtitle {
+                font-size: 7.5pt !important;
+                color: #444444 !important;
+            }
+            .print-footer-note {
+                display: block !important;
+                text-align: center !important;
+                font-size: 7pt !important;
+                color: #555555 !important;
+                margin-top: 10px !important;
+                border-top: 0.5px solid #999999 !important;
+                padding-top: 3px !important;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-light">
 
-<nav class="navbar navbar-dark bg-primary p-3">
-    <a class="navbar-brand" href="/">Timetable</a>
-    <div>
-        <a href="/add_data" class="btn btn-light btn-sm">Add Subject</a>
-        <a href="/add_room" class="btn btn-light btn-sm">Add Room</a>
-        <a href="/add_faculty" class="btn btn-light btn-sm">Add Faculty</a>
-        <a href="/add_class" class="btn btn-light btn-sm">Add Class</a>
-        <a href="/assign_batch" class="btn btn-light btn-sm">Assign Batch</a>
-        <a href="/view_data" class="btn btn-light btn-sm">View Data</a>
-        <a href="/timetable" class="btn btn-light btn-sm">Timetable</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 py-2 shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/">
+            <span class="badge bg-primary">🎓 STMS</span> Smart Timetable Management
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/">Home</a>
+                </li>
+
+                {% if session.get('role') == 'admin' %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/admin/dashboard">Admin Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/timetable">Timetable Hub</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/admin/rooms_timetable">Rooms & Labs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/admin/labs"><i class="bi bi-cpu me-1"></i>Labs Hub</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/admin/labs/utilization"><i class="bi bi-graph-up me-1"></i>Lab Utilization</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/admin/timetable/history">History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/view_data">Manage Data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/admin/allocations">Faculty Allocations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/admin/users">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/admin/registrations">Registrations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/admin/logs">Auth Logs</a>
+                </li>
+                {% elif session.get('role') == 'teacher' %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/teacher/dashboard">My Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/timetable">Master Schedule</a>
+                </li>
+                {% elif session.get('role') == 'student' %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/student/dashboard">Class Timetable</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/timetable">Master Schedule</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/login">Sign In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/register">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50" href="/timetable">Public Timetables</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <div class="d-flex align-items-center gap-2">
+                {% if session.get('user_id') %}
+                    <span class="badge {% if session.get('role') == 'admin' %}bg-danger{% elif session.get('role') == 'teacher' %}bg-success{% else %}bg-info text-dark{% endif %} px-3 py-2 rounded-pill">
+                        {{ session.get('role')|upper }}: {{ session.get('name') or session.get('username') }}
+                    </span>
+                    <a href="/logout" class="btn btn-outline-light btn-sm rounded-pill px-3">Logout</a>
+                {% else %}
+                    <a href="/login" class="btn btn-outline-light btn-sm rounded-pill px-3">Sign In</a>
+                    <a href="/register" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">Register</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </nav>
 
-<div class="container mt-4">
+
+<div class="container-fluid px-3 px-md-4 mt-3 mt-md-4" style="max-width: 1440px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show shadow-sm" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
 </div>
 
@@ -53,6 +371,7 @@ function confirmDelete(url){
 </script>
 {% endif %}
 {% endwith %}
+
 
 </body>
 </html>

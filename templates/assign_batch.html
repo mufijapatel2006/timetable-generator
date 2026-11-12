@@ -1,51 +1,62 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card shadow p-4">
-    <h4 class="mb-3">Assign Batch Faculty</h4>
-
-    <form method="POST">
-
-        <!-- CLASS + SUBJECT -->
-        <div class="row mb-3">
-            <div class="col">
-                <label>Class</label>
-                <select name="class" class="form-control" required>
-                    {% for c in classes %}
-                    <option value="{{ c[0] }}">{{ c[1] }}</option>
-                    {% endfor %}
-                </select>
+<div class="row justify-content-center">
+    <div class="col-lg-9 col-md-11">
+        <div class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-white">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+                <div>
+                    <h3 class="fw-bold mb-1">Assign Practical Batch Instructors</h3>
+                    <p class="text-muted small mb-0">Map dedicated lab faculty instructors to batches A1, A2, A3, and A4</p>
+                </div>
+                <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Back to Dashboard</a>
             </div>
 
-            <div class="col">
-                <label>Practical Subject</label>
-                <select name="subject" class="form-control" required>
-                    {% for s in subjects %}
-                    <option value="{{ s[0] }}">{{ s[1] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+            <form method="POST">
+                <!-- CLASS + SUBJECT -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Class / Division <span class="text-danger">*</span></label>
+                        <select name="class" class="form-select rounded-3" required>
+                            {% for c in classes %}
+                            <option value="{{ c[0] }}">{{ c[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Practical Subject / Lab Course <span class="text-danger">*</span></label>
+                        <select name="subject" class="form-select rounded-3" required>
+                            {% for s in subjects %}
+                            <option value="{{ s[0] }}">{{ s[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- BATCH ASSIGNMENT -->
+                <div class="card bg-light border-0 rounded-3 p-3 mb-4">
+                    <h6 class="fw-bold text-dark mb-3">Batch Instructor Allocation (Concurrent 2-Hr Practical)</h6>
+                    <div class="row g-3">
+                        {% for batch in ['A1','A2','A3','A4'] %}
+                        <div class="col-6 col-md-3">
+                            <label class="form-label small fw-bold text-uppercase text-primary mb-1">Batch {{ batch }}</label>
+                            <select name="{{ batch }}" class="form-select rounded-3 form-select-sm" required>
+                                {% for f in faculty %}
+                                <option value="{{ f[0] }}">{{ f[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-warning text-dark btn-lg rounded-3 w-100 shadow-sm fw-bold">
+                    Save Batch Faculty Assignments
+                </button>
+            </form>
         </div>
-
-        <!-- BATCH ASSIGNMENT -->
-        <div class="row g-3">
-
-            {% for batch in ['A1','A2','A3','A4'] %}
-            <div class="col-md-3">
-                <label>{{ batch }}</label>
-                <select name="{{ batch }}" class="form-control" required>
-                    {% for f in faculty %}
-                    <option value="{{ f[0] }}">{{ f[1] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% endfor %}
-
-        </div>
-
-        <button class="btn btn-warning mt-3">Assign Batches</button>
-
-    </form>
+    </div>
 </div>
 
 {% endblock %}

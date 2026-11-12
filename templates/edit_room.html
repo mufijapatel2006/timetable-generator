@@ -1,21 +1,64 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card shadow p-4">
-    <h4>Edit Room</h4>
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-white">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+                <div>
+                    <h3 class="fw-bold mb-1">Edit Facility or Room</h3>
+                    <p class="text-muted small mb-0">Modify room identifier or facility type</p>
+                </div>
+                <a href="/view_data" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Back to Data</a>
+            </div>
 
-    <form method="POST">
+            <form method="POST">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-7 col-12">
+                        <label class="form-label fw-semibold">Facility / Room Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" value="{{ room[1] }}" class="form-control form-control-lg rounded-3" required autofocus>
+                    </div>
+                    <div class="col-md-5 col-12">
+                        <label class="form-label fw-semibold">Unique Code</label>
+                        <input type="text" name="code" value="{{ room.code|default('') }}" class="form-control form-control-lg rounded-3 font-monospace">
+                    </div>
+                </div>
 
-        <input type="text" name="name" value="{{ room[1] }}" class="form-control mb-2">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6 col-12">
+                        <label class="form-label fw-semibold">Facility Type <span class="text-danger">*</span></label>
+                        <select name="type" class="form-select form-select-lg rounded-3">
+                            <option value="Classroom" {% if room[2]=='Classroom' %}selected{% endif %}>Classroom (Lecture Hall)</option>
+                            <option value="Lab" {% if room[2]=='Lab' %}selected{% endif %}>Laboratory (Practical Lab)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <label class="form-label fw-semibold">Student Capacity <span class="text-danger">*</span></label>
+                        <input type="number" name="capacity" value="{{ room.capacity|default(30 if room[2]=='Lab' else 60) }}" class="form-control form-control-lg rounded-3" min="1" max="150" required>
+                    </div>
+                </div>
 
-        <select name="type" class="form-control mb-2">
-            <option {% if room[2]=='Classroom' %}selected{% endif %}>Classroom</option>
-            <option {% if room[2]=='Lab' %}selected{% endif %}>Lab</option>
-        </select>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Department</label>
+                    <input type="text" name="department" value="{{ room.department|default('Computer Science & Engineering') }}" class="form-control rounded-3">
+                </div>
 
-        <button class="btn btn-warning">Update</button>
-    </form>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Equipment (Comma-separated)</label>
+                    <input type="text" name="custom_equipment" value="{{ room.equipment|join(', ') if room.equipment else '' }}" class="form-control rounded-3">
+                </div>
 
+                <div class="p-3 bg-light rounded-3 mb-4 small text-muted">
+                    <i class="bi bi-info-circle text-primary me-1"></i>
+                    For comprehensive equipment configuration, subject compatibility mappings, and maintenance downtime schedules, visit the <a href="/admin/labs" class="fw-semibold">Laboratories Hub</a>.
+                </div>
+
+                <button type="submit" class="btn btn-warning text-dark btn-lg w-100 rounded-3 shadow-sm fw-semibold">
+                    Update Facility
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

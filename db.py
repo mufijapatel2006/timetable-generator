@@ -1,5 +1,9 @@
-import mysql.connector
-from config import DB_CONFIG
+"""
+Database connector module.
+Routes database calls to FirebaseService.
+"""
+
+from firebase_service import service
 
 def get_db():
-    return mysql.connector.connect(**DB_CONFIG)
+    return service

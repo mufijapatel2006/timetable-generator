@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h2 class="fw-bold mb-1">Timetable Version & Change History</h2>
+        <p class="text-muted mb-0">
+            Immutable audit record of timetable generation, approval, slot edits, and publication events
+        </p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="/timetable" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i>Back to Timetable Hub
+        </a>
+        <button onclick="window.print()" class="btn btn-outline-dark btn-sm rounded-pill px-3 shadow-sm">
+            <i class="bi bi-printer me-1"></i>Print Audit Log
+        </button>
+    </div>
+</div>
+
+<!-- STATUS OVERVIEW CARDS -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <span class="text-muted small text-uppercase fw-semibold">Active Published Schedule</span>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <h4 class="fw-bold text-success mb-0">
+                    {% if published_doc %}
+                        Version {{ published_doc.version }}
+                    {% else %}
+                        Not Published
+                    {% endif %}
+                </h4>
+                <span class="badge bg-success-subtle text-success border border-success px-3 py-2 rounded-pill">
+                    Live on Portals
+                </span>
+            </div>
+            <div class="text-muted small mt-2">
+                {% if published_doc and published_doc.published_at %}
+                    Published: {{ published_doc.published_at }}
+                {% else %}
+                    No active schedule published yet
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <span class="text-muted small text-uppercase fw-semibold">Working / Draft Timetable</span>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <h4 class="fw-bold text-primary mb-0">Version {{ working_doc.version }}</h4>
+                <span class="badge {% if working_doc.status == 'Published' %}bg-success{% elif working_doc.status == 'Approved' %}bg-info text-dark{% elif working_doc.status == 'Pending Approval' %}bg-warning text-dark{% else %}bg-secondary{% endif %} px-3 py-2 rounded-pill">
+                    {{ working_doc.status }}
+                </span>
+            </div>
+            <div class="text-muted small mt-2">
+                Last modified: {{ working_doc.updated_at or working_doc.created_at or 'N/A' }}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <span class="text-muted small text-uppercase fw-semibold">Total Audit Entries</span>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <h4 class="fw-bold text-dark mb-0">{{ history|length }}</h4>
+                <span class="badge bg-dark-subtle text-dark px-3 py-2 rounded-pill">
+                    Logged Events
+                </span>
+            </div>
+            <div class="text-muted small mt-2">
+                Synchronized with Firebase Firestore &amp; Local Storage
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CHANGE HISTORY AUDIT TABLE -->
+<div class="card shadow border-0 rounded-4 overflow-hidden mb-5 bg-white print-sheet">
+    <!-- OFFICIAL INSTITUTIONAL PRINT HEADER -->
+    <div class="print-header d-none d-print-block px-3 pt-3">
+        <h2 class="print-institution">Smart Timetable Management System</h2>
+        <div class="print-title">Curriculum Timetable Lifecycle &amp; Version Audit Report</div>
+        <div class="print-meta">
+            <span><strong>Audit Scope:</strong> All Historical Modifications</span>
+            <span><strong>Active Published Version:</strong> {{ ('v' ~ published_doc.version) if published_doc else 'None' }}</span>
+            <span><strong>Total Events:</strong> {{ history|length }}</span>
+            <span><strong>Source:</strong> Cloud Firestore &amp; System Logs</span>
+        </div>
+    </div>
+
+    <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Modification &amp; Approval History</h5>
+        <span class="badge bg-secondary rounded-pill">Real-Time Audit Trail</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 16%;">Timestamp</th>
+                    <th style="width: 14%;">Action</th>
+                    <th style="width: 8%;">Version</th>
+                    <th style="width: 12%;">Status</th>
+                    <th style="width: 18%;">Modified By</th>
+                    <th style="width: 32%;">Change Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in history %}
+                <tr>
+                    <td class="small fw-semibold text-muted font-monospace">
+                        {{ item.timestamp }}
+                    </td>
+                    <td>
+                        {% if item.action == 'PUBLISHED' %}
+                            <span class="badge bg-success px-2 py-1">PUBLISHED</span>
+                        {% elif item.action == 'APPROVED' %}
+                            <span class="badge bg-info text-dark px-2 py-1">APPROVED</span>
+                        {% elif item.action == 'SUBMITTED' or item.action == 'SUBMITTED_FOR_APPROVAL' %}
+                            <span class="badge bg-warning text-dark px-2 py-1">PENDING APPROVAL</span>
+                        {% elif item.action == 'GENERATED' %}
+                            <span class="badge bg-primary px-2 py-1">GENERATED</span>
+                        {% elif item.action == 'EDITED_SLOT' %}
+                            <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1">SLOT EDITED</span>
+                        {% elif item.action == 'REVERTED' %}
+                            <span class="badge bg-secondary px-2 py-1">REVERTED</span>
+                        {% else %}
+                            <span class="badge bg-dark px-2 py-1">{{ item.action }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border fw-bold">v{{ item.version }}</span>
+                    </td>
+                    <td>
+                        <span class="badge {% if item.status == 'Published' %}bg-success-subtle text-success border border-success{% elif item.status == 'Approved' %}bg-info-subtle text-info border border-info{% elif item.status == 'Pending Approval' %}bg-warning-subtle text-warning border border-warning{% else %}bg-secondary-subtle text-secondary border border-secondary{% endif %}">
+                            {{ item.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="fw-bold">{{ item.admin_name }}</div>
+                        <div class="text-muted small">@{{ item.admin_username }}</div>
+                    </td>
+                    <td class="small">
+                        {{ item.description }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">
+                        No timetable change history logged yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="print-footer-note d-none d-print-block px-3 pb-2">
+        Generated via Smart Timetable Management System &bull; Official Timetable Lifecycle Audit Log &bull; Total Entries: {{ history|length }}
+    </div>
+</div>
+
+{% endblock %}

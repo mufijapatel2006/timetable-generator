@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h2 class="fw-bold mb-1">Classroom & Lab Timetable</h2>
+        <p class="text-muted mb-0">
+            Room allocation matrix as per approved schedule &bull; 
+            <span class="badge {% if working_doc.status == 'Published' %}bg-success{% elif working_doc.status == 'Approved' %}bg-info text-dark{% elif working_doc.status == 'Pending Approval' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                Status: {{ working_doc.status }} (v{{ working_doc.version }})
+            </span>
+        </p>
+    </div>
+    <div class="d-flex gap-2">
+        {% if selected_room_obj and selected_room_obj.type == 'Lab' %}
+        <a href="/admin/labs/{{ selected_room_obj.id }}/availability" class="btn btn-outline-warning text-dark btn-sm rounded-pill px-3 shadow-sm">
+            <i class="bi bi-tools me-1"></i>Manage Downtime
+        </a>
+        <a href="/admin/labs/utilization" class="btn btn-outline-success btn-sm rounded-pill px-3 shadow-sm">
+            <i class="bi bi-graph-up me-1"></i>Lab Analytics
+        </a>
+        {% endif %}
+        <a href="/timetable" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm">
+            <i class="bi bi-grid me-1"></i>Master Timetable Hub
+        </a>
+        <button onclick="window.print()" class="btn btn-outline-dark btn-sm rounded-pill px-3 shadow-sm">
+            <i class="bi bi-printer me-1"></i>Print Room Schedule
+        </button>
+    </div>
+</div>
+
+<!-- ROOM SELECTION SELECTOR -->
+<div class="card shadow-sm border-0 rounded-4 p-3 mb-4 bg-white">
+    <form method="GET" action="/admin/rooms_timetable" class="row g-3 align-items-center">
+        <div class="col-md-6">
+            <label class="form-label small text-muted text-uppercase fw-semibold mb-1">Select Classroom or Laboratory</label>
+            <select name="room" class="form-select form-select-lg shadow-none" onchange="this.form.submit()">
+                <optgroup label="Classrooms">
+                    {% for r in rooms if r.type == 'Classroom' %}
+                    <option value="{{ r.name }}" {% if r.name == selected_room %}selected{% endif %}>
+                        {{ r.name }} (Classroom)
+                    </option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Laboratories">
+                    {% for r in rooms if r.type == 'Lab' %}
+                    <option value="{{ r.name }}" {% if r.name == selected_room %}selected{% endif %}>
+                        {{ r.name }} (Laboratory)
+                    </option>
+                    {% endfor %}
+                </optgroup>
+            </select>
+        </div>
+        <div class="col-md-6 d-flex justify-content-md-end align-items-center mt-3 mt-md-0">
+            <div class="p-2 px-3 rounded-pill bg-light border d-flex align-items-center gap-2">
+                <span class="badge {% if selected_room_obj and selected_room_obj.type == 'Lab' %}bg-warning text-dark{% else %}bg-primary{% endif %} rounded-pill px-3 py-2">
+                    {{ selected_room_obj.type if selected_room_obj else 'Facility' }}
+                </span>
+                <span class="fw-bold fs-5 text-dark me-2">{{ selected_room }}</span>
+                {% if selected_room_obj and selected_room_obj.capacity %}
+                <span class="badge bg-light text-dark border rounded-pill">Cap: {{ selected_room_obj.capacity }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- ROOM SCHEDULE MATRIX -->
+<div class="card shadow border-0 rounded-4 overflow-hidden mb-5 print-sheet">
+    <!-- OFFICIAL INSTITUTIONAL PRINT HEADER -->
+    <div class="print-header d-none d-print-block px-3 pt-3">
+        <h2 class="print-institution">Smart Timetable Management System</h2>
+        <div class="print-title">Facility &amp; Classroom Allocation Schedule &bull; {{ selected_room }}</div>
+        <div class="print-meta">
+            <span><strong>Facility / Room:</strong> {{ selected_room }} ({{ selected_room_obj.type if selected_room_obj else 'Facility' }})</span>
+            <span><strong>Academic Year:</strong> 2026&ndash;2027</span>
+            <span><strong>Schedule Status:</strong> {{ working_doc.status }} (v{{ working_doc.version }})</span>
+            <span><strong>Scope:</strong> Weekly Booking Matrix</span>
+        </div>
+    </div>
+
+    <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Weekly Room Allocation: {{ selected_room }}</h5>
+        <span class="badge bg-secondary rounded-pill">6 Periods &bull; Mon - Fri</span>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 12%;">Day</th>
+                        <th style="width: 14.6%;">Period 1<br><small class="text-muted fw-normal">09:00 - 10:00</small></th>
+                        <th style="width: 14.6%;">Period 2<br><small class="text-muted fw-normal">10:00 - 11:00</small></th>
+                        <th style="width: 14.6%;">Period 3<br><small class="text-muted fw-normal">11:15 - 12:15</small></th>
+                        <th style="width: 14.6%;">Period 4<br><small class="text-muted fw-normal">12:15 - 01:15</small></th>
+                        <th style="width: 14.6%;">Period 5<br><small class="text-muted fw-normal">02:00 - 03:00</small></th>
+                        <th style="width: 14.6%;">Period 6<br><small class="text-muted fw-normal">03:00 - 04:00</small></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set days_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+                    {% set days_abbrs = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] %}
+                    {% for day in range(5) %}
+                    <tr>
+                        <td class="fw-bold bg-light text-start ps-3">
+                            {{ days_names[day] }}
+                        </td>
+                        {% for slot in range(6) %}
+                            {% set slot_key = days_abbrs[day] ~ '_' ~ slot %}
+                            {% set events = room_schedule[day][slot] if room_schedule|length > day else [] %}
+                            {% if events and events|length > 0 %}
+                                <td class="p-2 {% if events[0].type == 'Practical' %}bg-warning-subtle{% else %}bg-primary-subtle{% endif %}" style="min-height: 80px; vertical-align: middle;">
+                                    {% for ev in events %}
+                                    <div class="p-2 rounded bg-white border {% if ev.type == 'Practical' %}border-warning text-dark{% else %}border-primary text-primary-emphasis{% endif %} shadow-sm text-start mb-1" style="font-size: 0.8rem;">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="badge {% if ev.type == 'Practical' %}bg-warning text-dark{% else %}bg-primary text-white{% endif %}">
+                                                {{ ev.class }}
+                                            </span>
+                                            {% if ev.batch %}
+                                                <span class="badge bg-dark text-white">{{ ev.batch }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="fw-semibold text-truncate" title="{{ ev.text }}">
+                                            {{ ev.text }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </td>
+                            {% elif selected_room_obj and selected_room_obj.available_slots and slot_key in selected_room_obj.available_slots %}
+                                <td class="p-2 bg-danger-subtle text-danger" style="min-height: 80px; vertical-align: middle;">
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1 small">
+                                        <i class="bi bi-tools me-1"></i>Maintenance Downtime
+                                    </span>
+                                </td>
+                            {% else %}
+                                <td class="p-2 bg-light-subtle text-muted" style="min-height: 80px; vertical-align: middle;">
+                                    <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1 small">
+                                        Vacant
+                                    </span>
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- OFFICIAL INSTITUTIONAL PRINT SIGNATURE BLOCK -->
+        <div class="print-signatures d-none d-print-flex px-3 pb-2">
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Facility Manager</div>
+                <div class="print-signature-subtitle">Infrastructure &amp; Lab Incharge</div>
+            </div>
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Timetable Officer</div>
+                <div class="print-signature-subtitle">Academic Allocation Coordinator</div>
+            </div>
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Approved By</div>
+                <div class="print-signature-subtitle">Dean Academics / Principal</div>
+            </div>
+        </div>
+        <div class="print-footer-note d-none d-print-block">
+            Generated via Smart Timetable Management System &bull; Room / Hall: {{ selected_room }} &bull; Mon - Fri Allocation Matrix
+        </div>
+    </div>
+</div>
+
+{% endblock %}

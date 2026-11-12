@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center py-4">
+    <div class="col-lg-8 text-center">
+        <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle shadow mb-3" style="width: 70px; height: 70px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+            </svg>
+        </div>
+        <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1 rounded-pill text-uppercase fw-semibold mb-2">
+            New Account Registration
+        </span>
+        <h2 class="fw-bold text-dark mb-2">Join the Smart Timetable System</h2>
+        <p class="text-muted mx-auto mb-4" style="max-width: 580px;">
+            Select your academic role to proceed with registration. All new registrations undergo official administrative verification before account activation.
+        </p>
+
+        <div class="row g-4 justify-content-center mt-2">
+            <!-- FACULTY REGISTRATION CARD -->
+            <div class="col-md-6">
+                <div class="card h-100 shadow border-0 rounded-4 text-center p-4 hover-shadow transition">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-success-subtle text-success rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person-video3" viewBox="0 0 16 16">
+                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4.5A2.5 2.5 0 0 1 4.5 2h7A2.5 2.5 0 0 1 14 4.5M3 4.5V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5a1.5 1.5 0 0 0-1.5-1.5h-7A1.5 1.5 0 0 0 3 4.5"/>
+                            <path d="M8 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.5 1a2.5 2.5 0 0 0-2.5 2.5V12h5v-.5a2.5 2.5 0 0 0-2.5-2.5z"/>
+                        </svg>
+                    </div>
+                    <h4 class="fw-bold mb-2">Register as Faculty</h4>
+                    <p class="text-muted small mb-4">
+                        For professors, lecturers, and lab instructors to inspect assigned lectures, batches, and academic workloads.
+                    </p>
+                    <div class="mt-auto">
+                        <a href="/register/faculty" class="btn btn-success btn-lg w-100 rounded-3 fw-semibold shadow-sm">
+                            Faculty Registration &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT REGISTRATION CARD -->
+            <div class="col-md-6">
+                <div class="card h-100 shadow border-0 rounded-4 text-center p-4 hover-shadow transition">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary-subtle text-primary rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-mortarboard" viewBox="0 0 16 16">
+                            <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917zM8 8.46 1.758 5.965 8 3.052l6.242 2.913z"/>
+                            <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466zm-.068 1.873.22-.748 3.496 1.311a.5.5 0 0 0 .352 0l3.496-1.311.22.748L8 12.46z"/>
+                        </svg>
+                    </div>
+                    <h4 class="fw-bold mb-2">Register as Student</h4>
+                    <p class="text-muted small mb-4">
+                        For enrolled students to access personalized class timetables locked to their registered division and lab batch.
+                    </p>
+                    <div class="mt-auto">
+                        <a href="/register/student" class="btn btn-primary btn-lg w-100 rounded-3 fw-semibold shadow-sm">
+                            Student Registration &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 text-muted small">
+            Already have an active account?
+            <a href="/login" class="text-primary fw-semibold text-decoration-none ms-1">Sign In to your Portal &rarr;</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

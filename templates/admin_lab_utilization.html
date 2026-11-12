@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- OFFICIAL PRINTABLE HEADER (Shown only when printing) -->
+<div class="print-header d-none">
+    <h2 class="print-institution">Smart Timetable Management System</h2>
+    <div class="print-title">INSTITUTIONAL LABORATORY UTILIZATION &amp; PRACTICAL LOAD REPORT</div>
+    <div class="print-meta">
+        Academic Year: 2024-2025 &bull; Report Type: Laboratory Capacity &amp; Resource Efficiency &bull; Date: {{ now_date|default('Current Semester') }}
+    </div>
+</div>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 no-print">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-graph-up text-success me-2"></i>Laboratory Utilization &amp; Practical Workload
+        </h2>
+        <p class="text-muted mb-0">Institutional facility analytics, weekly capacity utilization, downtime impact, and scheduled practical distribution.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <button onclick="window.print()" class="btn btn-outline-dark shadow-sm">
+            <i class="bi bi-printer me-1"></i>Print Report
+        </button>
+        <a href="/admin/labs" class="btn btn-outline-primary shadow-sm">
+            <i class="bi bi-cpu me-1"></i>Laboratories Directory
+        </a>
+        <a href="/timetable" class="btn btn-primary shadow-sm">
+            <i class="bi bi-calendar3 me-1"></i>Master Timetable
+        </a>
+    </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY METRIC CARDS -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <span class="text-muted small text-uppercase fw-bold">Monitored Facilities</span>
+            <h3 class="fw-bold text-primary mb-0 mt-1">{{ report.summary.total_labs }} <span class="fs-6 fw-normal text-muted">Labs</span></h3>
+            <span class="small text-muted">Institutional laboratory inventory</span>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <span class="text-muted small text-uppercase fw-bold">Total Operating Capacity</span>
+            <h3 class="fw-bold text-info mb-0 mt-1">{{ report.summary.total_operating_capacity }} <span class="fs-6 fw-normal text-muted">hrs/wk</span></h3>
+            <span class="small text-muted">Net after maintenance reservations</span>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <span class="text-muted small text-uppercase fw-bold">Scheduled Practical Load</span>
+            <h3 class="fw-bold text-success mb-0 mt-1">{{ report.summary.total_booked_hours }} <span class="fs-6 fw-normal text-muted">hrs/wk</span></h3>
+            <span class="small text-muted">Classroom practical sessions</span>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+            <span class="text-muted small text-uppercase fw-bold">Average Facility Load</span>
+            <h3 class="fw-bold text-warning mb-0 mt-1">{{ report.summary.average_utilization }}%</h3>
+            <div class="small mt-1">
+                <span class="badge bg-success-subtle text-success me-1">{{ report.summary.optimal_count }} Optimal</span>
+                <span class="badge bg-danger-subtle text-danger">{{ report.summary.high_load_count }} High Load</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FACILITY UTILIZATION COMPARATIVE OVERVIEW -->
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white mb-5">
+    <div class="card-header bg-white py-3 px-4 border-0 border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0">Laboratory-by-Laboratory Resource Analysis</h5>
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill small">
+            Weekly Breakdown
+        </span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Laboratory</th>
+                    <th>Department</th>
+                    <th class="text-center">Capacity</th>
+                    <th class="text-center">Maintenance</th>
+                    <th class="text-center">Operating Hrs</th>
+                    <th class="text-center">Booked Hrs</th>
+                    <th style="min-width: 180px;">Utilization Level</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-end pe-4 no-print">Quick Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lab in report.labs %}
+                <tr>
+                    <td class="ps-4">
+                        <div class="fw-bold text-dark">{{ lab.name }}</div>
+                        <span class="badge bg-light text-dark border font-monospace small" style="font-size: 0.72rem;">
+                            {{ lab.code }}
+                        </span>
+                    </td>
+                    <td><span class="small text-muted">{{ lab.department }}</span></td>
+                    <td class="text-center">
+                        <span class="badge bg-light text-dark border px-2 py-1">{{ lab.capacity }}</span>
+                    </td>
+                    <td class="text-center">
+                        {% if lab.maintenance_count > 0 %}
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">
+                            {{ lab.maintenance_count }} slots
+                        </span>
+                        {% else %}
+                        <span class="text-muted small">0 slots</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center fw-semibold text-info">{{ lab.operating_capacity }}</td>
+                    <td class="text-center fw-bold text-dark">{{ lab.booked_hours }}</td>
+                    <td>
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="fw-bold">{{ lab.utilization }}%</span>
+                            <span class="text-muted">{{ lab.booked_hours }}/{{ lab.operating_capacity }}h</span>
+                        </div>
+                        <div class="progress" style="height: 7px;">
+                            <div class="progress-bar {% if lab.utilization >= 75 %}bg-danger{% elif lab.utilization >= 30 %}bg-success{% else %}bg-info{% endif %}" role="progressbar" style="width: {{ lab.utilization }}%;" aria-valuenow="{{ lab.utilization }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        {% if lab.status == 'High Load' %}
+                        <span class="badge bg-danger text-white rounded-pill px-3 py-1">High Load</span>
+                        {% elif lab.status == 'Optimal' %}
+                        <span class="badge bg-success text-white rounded-pill px-3 py-1">Optimal</span>
+                        {% elif lab.status == 'Maintenance Heavy' %}
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-1">Downtime</span>
+                        {% else %}
+                        <span class="badge bg-info text-dark rounded-pill px-3 py-1">Underutilized</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end pe-4 no-print">
+                        <a href="/admin/rooms_timetable?room={{ lab.name|urlencode }}" class="btn btn-outline-primary btn-sm rounded-pill" title="View Weekly Timetable">
+                            Schedule &rarr;
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- DETAILED SESSIONS BREAKDOWN PER LABORATORY -->
+<div class="mb-5">
+    <h4 class="fw-bold mb-3"><i class="bi bi-calendar2-week text-primary me-2"></i>Scheduled Session Allocations</h4>
+    
+    <div class="row g-4">
+        {% for lab in report.labs %}
+        <div class="col-lg-6 col-12">
+            <div class="card shadow-sm border-0 rounded-4 h-100 bg-white overflow-hidden">
+                <div class="card-header bg-light py-3 px-4 border-0 border-bottom d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong class="text-dark fs-6">{{ lab.name }}</strong>
+                        <span class="badge bg-secondary-subtle text-secondary-emphasis border ms-1 font-monospace small">{{ lab.code }}</span>
+                    </div>
+                    <span class="badge {% if lab.status == 'High Load' %}bg-danger{% elif lab.status == 'Optimal' %}bg-success{% else %}bg-info text-dark{% endif %} rounded-pill">
+                        {{ lab.booked_hours }} Hours Scheduled ({{ lab.utilization }}%)
+                    </span>
+                </div>
+                <div class="card-body p-3">
+                    {% if lab.sessions %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped align-middle mb-0" style="font-size: 0.82rem;">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Period</th>
+                                    <th>Class / Batch</th>
+                                    <th>Session Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for s in lab.sessions %}
+                                <tr>
+                                    <td class="fw-bold text-primary">{{ s.day }}</td>
+                                    <td>Period {{ s.period }}</td>
+                                    <td>
+                                        <span class="fw-semibold">{{ s.class }}</span>
+                                        {% if s.batch %}<span class="badge bg-danger-subtle text-danger border ms-1">{{ s.batch }}</span>{% endif %}
+                                    </td>
+                                    <td class="text-truncate" style="max-width: 220px;" title="{{ s.text }}">
+                                        {{ s.text }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-inbox fs-2 d-block mb-1 text-secondary opacity-50"></i>
+                        <span class="small">No curriculum practical sessions currently scheduled in this laboratory.</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- PRINTABLE FOOTER -->
+<div class="print-signatures d-none">
+    <div class="print-signature-box">
+        <div class="print-signature-line"></div>
+        <div class="print-signature-title">Laboratory In-Charge</div>
+        <div class="print-signature-subtitle">Facility Management</div>
+    </div>
+    <div class="print-signature-box">
+        <div class="print-signature-line"></div>
+        <div class="print-signature-title">Academic Coordinator</div>
+        <div class="print-signature-subtitle">Time Table Committee</div>
+    </div>
+    <div class="print-signature-box">
+        <div class="print-signature-line"></div>
+        <div class="print-signature-title">Head of Department</div>
+        <div class="print-signature-subtitle">Authorized Institutional Signatory</div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <h2 class="fw-bold mb-0">Student Portal</h2>
+            {% if published_doc %}
+                <span class="badge bg-success-subtle text-success border border-success px-3 py-1 rounded-pill">
+                    <i class="bi bi-check2-circle me-1"></i>Published Schedule v{{ published_doc.version }}
+                </span>
+            {% else %}
+                <span class="badge bg-warning-subtle text-warning border border-warning px-3 py-1 rounded-pill">
+                    No Schedule Published
+                </span>
+            {% endif %}
+        </div>
+        <p class="text-muted mb-0">Class Schedule for <strong>{{ selected_class }}</strong> (Batch <strong>{{ selected_batch }}</strong>)</p>
+    </div>
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        {% if session.get('role') == 'student' %}
+        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#studentProfileModal">
+            🎓 My Profile
+        </button>
+        {% endif %}
+        <button onclick="window.print()" class="btn btn-outline-dark btn-sm">
+            Print Timetable
+        </button>
+    </div>
+</div>
+
+<!-- ANNOUNCEMENTS & TIMETABLE UPDATES BANNER -->
+<div class="alert alert-primary-subtle border-0 shadow-sm rounded-4 mb-4 p-3 d-flex align-items-start gap-3">
+    <div class="fs-4 text-primary">📢</div>
+    <div class="flex-grow-1">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <h6 class="fw-bold text-primary mb-1">
+                Class Timetable Notification &bull; Version {{ published_doc.version or '1.0' }}
+            </h6>
+            <span class="badge bg-primary rounded-pill small">Official Academic Schedule</span>
+        </div>
+        <p class="small text-muted mb-0">
+            {{ published_doc.description or 'Official academic timetable active for all semester divisions. Students must report on time to assigned classrooms and computer lab halls for practical sessions.' }}
+            {% if published_doc.published_at %}&bull; <span class="fw-semibold">Published: {{ published_doc.published_at }}</span>{% endif %}
+        </p>
+    </div>
+</div>
+
+{% if session.get('role') == 'student' %}
+<!-- STUDENT PROFILE MODAL -->
+<div class="modal fade" id="studentProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold">Student Profile &amp; Enrollment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary-subtle text-primary rounded-circle mb-2" style="width: 70px; height: 70px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-mortarboard-fill" viewBox="0 0 16 16">
+                            <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917zM8 8.46 1.758 5.965 8 3.052l6.242 2.913z"/>
+                            <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466zm-.068 1.873.22-.748 3.496 1.311a.5.5 0 0 0 .352 0l3.496-1.311.22.748L8 12.46z"/>
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold mb-0">{{ session.get('name') or 'Enrolled Student' }}</h5>
+                    <span class="badge bg-primary-subtle text-primary border border-primary rounded-pill px-3 py-1 mt-1">
+                        Active Enrolled Student
+                    </span>
+                </div>
+
+                <ul class="list-group list-group-flush rounded-3 small">
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Student ID / Roll No:</span>
+                        <span class="fw-bold">{{ session.get('username') or 'student' }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Class &amp; Division:</span>
+                        <span class="fw-bold text-primary">{{ selected_class }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Assigned Lab Batch:</span>
+                        <span class="badge bg-primary fs-6 px-3 py-1 rounded-pill">Batch {{ selected_batch }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Department:</span>
+                        <span class="fw-bold">{{ session.get('department') or 'Computer Science & Engineering' }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Registered Email:</span>
+                        <span class="fw-bold">{{ session.get('email') or 'student@institution.edu' }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between py-2">
+                        <span class="text-muted">Timetable Access:</span>
+                        <span class="badge bg-secondary">Read-Only Schedule</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- CLASS & BATCH SELECTOR FORM -->
+<div class="card shadow-sm border-0 rounded-4 p-3 mb-4 bg-white">
+    {% if session.get('role') == 'student' %}
+        <div class="d-flex flex-wrap justify-content-between align-items-center p-2">
+            <div>
+                <span class="text-muted small text-uppercase fw-bold d-block">Assigned Class &amp; Division</span>
+                <span class="fs-5 fw-bold text-dark">{{ selected_class }}</span> &bull; 
+                <span class="badge bg-primary fs-6 px-3 py-1 rounded-pill">Batch {{ selected_batch }}</span>
+            </div>
+            <div>
+                <span class="badge bg-secondary-subtle text-secondary border px-3 py-2 rounded-pill small">
+                    <i class="bi bi-lock-fill me-1"></i>Locked to your Student Profile
+                </span>
+            </div>
+        </div>
+    {% else %}
+        <form method="GET" action="/student/dashboard" class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <label class="form-label small text-muted text-uppercase fw-semibold mb-1">Select Class</label>
+                <select name="class_name" class="form-select" onchange="this.form.submit()">
+                    {% for c in classes %}
+                    <option value="{{ c.name }}" {% if c.name == selected_class %}selected{% endif %}>
+                        {{ c.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-5">
+                <label class="form-label small text-muted text-uppercase fw-semibold mb-1">Select Batch</label>
+                <div class="btn-group w-100" role="group">
+                    {% for b in ['A1', 'A2', 'A3', 'A4'] %}
+                    <input type="radio" class="btn-check" name="batch" id="batch_{{ b }}" value="{{ b }}"
+                           autocomplete="off" onchange="this.form.submit()" {% if b == selected_batch %}checked{% endif %}>
+                    <label class="btn btn-outline-primary" for="batch_{{ b }}">Batch {{ b }}</label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-2 text-end">
+                <span class="badge bg-primary fs-6 px-3 py-2 rounded-pill w-100 mt-4">
+                    {{ selected_class }} - {{ selected_batch }}
+                </span>
+            </div>
+        </form>
+    {% endif %}
+</div>
+
+<!-- STUDENT TIMETABLE GRID -->
+<div class="card shadow border-0 rounded-4 overflow-hidden mb-5 print-sheet">
+    <!-- OFFICIAL INSTITUTIONAL PRINT HEADER -->
+    <div class="print-header d-none d-print-block px-3 pt-3">
+        <h2 class="print-institution">Smart Timetable Management System</h2>
+        <div class="print-title">Student Class Schedule &bull; Batch-Specific Allocation</div>
+        <div class="print-meta">
+            <span><strong>Class / Division:</strong> {{ selected_class }} (Batch {{ selected_batch }})</span>
+            <span><strong>Academic Year:</strong> 2026&ndash;2027</span>
+            <span><strong>Schedule Version:</strong> v{{ published_doc.version or '1.0' }} (Official)</span>
+            <span><strong>Student:</strong> {{ session.get('name') or session.get('username') or 'Enrolled Student' }}</span>
+        </div>
+    </div>
+
+    <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">{{ selected_class }} - Weekly Schedule (Batch {{ selected_batch }})</h5>
+        <span class="badge bg-white text-primary">6 Periods / Day</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 12%;">Day</th>
+                        <th style="width: 14.6%;">Period 1</th>
+                        <th style="width: 14.6%;">Period 2</th>
+                        <th style="width: 14.6%;">Period 3</th>
+                        <th style="width: 14.6%;">Period 4</th>
+                        <th style="width: 14.6%;">Period 5</th>
+                        <th style="width: 14.6%;">Period 6</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set days_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+                    {% for day_idx in range(5) %}
+                    <tr>
+                        <td class="fw-bold bg-light text-start ps-3">{{ days_names[day_idx] }}</td>
+                        {% set skip = namespace(next=false) %}
+                        {% for p_idx in range(6) %}
+                            {% if skip.next %}
+                                {% set skip.next = false %}
+                            {% else %}
+                                {% set slot = schedule[day_idx][p_idx] %}
+                                {% set next_slot = schedule[day_idx][p_idx + 1] if p_idx < 5 else None %}
+
+                                {% if slot and ('Lab' in slot or 'Practical' in slot) and next_slot and '(Contd.)' in next_slot %}
+                                    {% set skip.next = true %}
+                                    <td colspan="2" class="p-2 bg-warning-subtle text-warning-emphasis" style="height: 85px; vertical-align: middle;">
+                                        <div class="p-2 rounded bg-white border border-warning shadow-sm text-start">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="badge bg-warning text-dark fw-bold">
+                                                    <i class="bi bi-gear-fill me-1"></i>Practical &bull; Batch {{ selected_batch }}
+                                                </span>
+                                                <span class="badge bg-dark text-white font-monospace small">2 Hours Concurrent</span>
+                                            </div>
+                                            <div class="fw-bold text-dark fs-6">{{ slot }}</div>
+                                            <div class="text-success small fw-semibold mt-1">
+                                                <i class="bi bi-check-circle me-1"></i>As per Master Timetable
+                                            </div>
+                                        </div>
+                                    </td>
+                                {% elif slot %}
+                                    <td class="p-2 {% if 'Lab' in slot or 'Practical' in slot %}bg-warning-subtle text-warning-emphasis{% elif not ('Library' in slot or 'Self-Study' in slot) %}bg-white{% else %}bg-light text-muted{% endif %}" style="height: 85px; vertical-align: middle;">
+                                        {% if 'Lab' in slot or 'Practical' in slot %}
+                                        <div class="p-1 rounded small border border-warning">
+                                            <div class="badge bg-warning text-dark mb-1">Practical</div>
+                                            <div class="fw-semibold">{{ slot | safe }}</div>
+                                        </div>
+                                        {% elif 'Library' in slot or 'Self-Study' in slot %}
+                                        <span class="badge bg-secondary-subtle text-secondary px-2 py-1">Self-Study / Library</span>
+                                        {% else %}
+                                        <div class="p-1 rounded small border border-primary-subtle text-start">
+                                            <div class="badge bg-primary-subtle text-primary mb-1">Theory</div>
+                                            <div class="fw-semibold">{{ slot | safe }}</div>
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                {% else %}
+                                    <td class="p-2 bg-light text-muted" style="height: 85px; vertical-align: middle;">
+                                        <span class="text-muted small">-</span>
+                                    </td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- OFFICIAL INSTITUTIONAL PRINT SIGNATURE BLOCK -->
+        <div class="print-signatures d-none d-print-flex px-3 pb-2">
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Class Teacher</div>
+                <div class="print-signature-subtitle">Academic Division Mentor</div>
+            </div>
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Verified By</div>
+                <div class="print-signature-subtitle">Head of Department (H.O.D.)</div>
+            </div>
+            <div class="print-signature-box">
+                <div class="print-signature-line"></div>
+                <div class="print-signature-title">Approved By</div>
+                <div class="print-signature-subtitle">Dean Academics / Principal</div>
+            </div>
+        </div>
+        <div class="print-footer-note d-none d-print-block">
+            Generated via Smart Timetable Management System &bull; Class: {{ selected_class }} &bull; Batch: {{ selected_batch }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

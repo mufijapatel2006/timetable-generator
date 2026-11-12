@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 rounded-4 p-4">
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-primary-subtle text-primary rounded-circle mb-3" style="width: 65px; height: 65px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-mortarboard" viewBox="0 0 16 16">
+                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917zM8 8.46 1.758 5.965 8 3.052l6.242 2.913z"/>
+                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466zm-.068 1.873.22-.748 3.496 1.311a.5.5 0 0 0 .352 0l3.496-1.311.22.748L8 12.46z"/>
+                    </svg>
+                </div>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill text-uppercase fw-semibold mb-2">
+                    Student Access
+                </span>
+                <h3 class="fw-bold mb-1">Student Portal Sign In</h3>
+                <p class="text-muted small">Sign in to access your class schedule locked to your lab batch</p>
+            </div>
+
+            <form method="POST" action="/student/login">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Student Username</label>
+                    <input type="text" id="usernameInput" name="username" class="form-control form-control-lg rounded-3" placeholder="Enter student username" required autofocus>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Password</label>
+                    <input type="password" id="passwordInput" name="password" class="form-control form-control-lg rounded-3" placeholder="Enter password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 shadow-sm mb-3">
+                    Sign In to Student Portal
+                </button>
+            </form>
+
+            <div class="card bg-light border-0 rounded-3 p-3 mb-3 text-center">
+                <div class="small text-muted mb-2">Don't have a personal student login?</div>
+                <a href="/student/dashboard" class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-semibold">
+                    Browse Class Timetables as Guest &rarr;
+                </a>
+            </div>
+
+            <div class="alert alert-primary-subtle border-0 rounded-3 small mt-2">
+                <div class="fw-bold mb-1">🎓 Student Demo Credentials:</div>
+                <div class="text-muted">Username: <code>student</code> &bull; Password: <code>student123</code></div>
+            </div>
+
+            <hr class="my-3 text-muted">
+
+            <div class="text-center small text-muted">
+                Need a different portal?
+                <div class="mt-2 d-flex justify-content-center gap-3">
+                    <a href="/admin/login" class="text-decoration-none text-danger fw-semibold">🛡️ Admin Login</a>
+                    <span>&bull;</span>
+                    <a href="/teacher/login" class="text-decoration-none text-success fw-semibold">👨‍🏫 Teacher Login</a>
+                    <span>&bull;</span>
+                    <a href="/login" class="text-decoration-none text-secondary">All Portals</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

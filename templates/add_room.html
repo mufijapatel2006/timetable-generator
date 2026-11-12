@@ -1,27 +1,64 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card shadow p-4">
-    <h4>Add Room</h4>
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-white">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+                <div>
+                    <h3 class="fw-bold mb-1">Add Facility or Room</h3>
+                    <p class="text-muted small mb-0">Register a new Lecture Classroom or Laboratory Room</p>
+                </div>
+                <a href="/view_data" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Back to Data</a>
+            </div>
 
-    <form method="POST">
+            <form method="POST">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-7 col-12">
+                        <label class="form-label fw-semibold">Facility / Room Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control form-control-lg rounded-3" placeholder="e.g. Room 101, Computer Lab 2" required autofocus>
+                    </div>
+                    <div class="col-md-5 col-12">
+                        <label class="form-label fw-semibold">Unique Code</label>
+                        <input type="text" name="code" class="form-control form-control-lg rounded-3 font-monospace" placeholder="e.g. CLS-01, LAB-02">
+                    </div>
+                </div>
 
-        <div class="mb-3">
-            <label>Room Name</label>
-            <input type="text" name="name" class="form-control" required>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6 col-12">
+                        <label class="form-label fw-semibold">Facility Type <span class="text-danger">*</span></label>
+                        <select name="type" class="form-select form-select-lg rounded-3">
+                            <option value="Classroom">Classroom (Lecture Hall)</option>
+                            <option value="Lab">Laboratory (Practical Lab)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <label class="form-label fw-semibold">Student Capacity <span class="text-danger">*</span></label>
+                        <input type="number" name="capacity" class="form-control form-control-lg rounded-3" value="60" min="1" max="150" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Department</label>
+                    <input type="text" name="department" class="form-control rounded-3" value="Computer Science &amp; Engineering">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Equipment (Comma-separated)</label>
+                    <input type="text" name="custom_equipment" class="form-control rounded-3" placeholder="e.g. AV Projector, Smart Board, Workstations, Gigabit LAN">
+                </div>
+
+                <div class="p-3 bg-light rounded-3 mb-4 small text-muted">
+                    <i class="bi bi-info-circle text-primary me-1"></i>
+                    To configure in-depth equipment specifications, subject practical restrictions, and maintenance downtime for computer labs, visit the <a href="/admin/labs" class="fw-semibold">Laboratories Hub</a>.
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100 rounded-3 shadow-sm fw-semibold">
+                    Add Facility
+                </button>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label>Room Type</label>
-            <select name="type" class="form-control">
-                <option>Classroom</option>
-                <option>Lab</option>
-            </select>
-        </div>
-
-        <button class="btn btn-success">Add Room</button>
-    </form>
-
+    </div>
 </div>
 
 {% endblock %}
