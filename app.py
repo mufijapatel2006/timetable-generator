@@ -1,10 +1,11 @@
+import os
 from functools import wraps
 from flask import Flask, render_template, request, redirect, flash, session, jsonify
 from firebase_service import service as db
 from generator import generate_timetable
 
 app = Flask(__name__)
-app.secret_key = "secret_timetable_key_123"
+app.secret_key = os.environ.get("SECRET_KEY", "secret_timetable_key_123")
 app.url_map.strict_slashes = False
 
 # =============================================================================

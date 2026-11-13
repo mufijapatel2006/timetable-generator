@@ -92,30 +92,66 @@ class FirebaseService:
         self._initialized = True
 
     def _init_firebase(self):
-        """Attempts to initialize Firebase Admin SDK from certificate or env."""
-        cred_path = None
-        for path in [
-            os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
-            os.environ.get("FIREBASE_CREDENTIALS"),
-            *[os.path.join(os.path.dirname(os.path.abspath(__file__)), f) for f in CREDENTIAL_FILES]
-        ]:
-            if path and os.path.isfile(path):
-                cred_path = path
-                break
+        """Attempts to initialize Firebase Admin SDK from certificate, env var, or local file."""
+        import base64
+        cred = None
 
-        if cred_path:
+        # 1. Check for raw JSON or Base64 in environment variables (for Vercel / Serverless hosting)
+        env_raw = os.environ.get("FIREBASE_CREDENTIALS_JSON") or os.environ.get("FIREBASE_CREDENTIALS")
+        if env_raw and env_raw.strip().startswith("{"):
             try:
                 import firebase_admin
                 from firebase_admin import credentials, firestore
+                cert_dict = json.loads(env_raw)
+                cred = credentials.Certificate(cert_dict)
+                logger.info("Initializing Firebase Admin using JSON string from environment variable.")
+            except Exception as e:
+                logger.warning(f"Failed to parse Firebase JSON credentials from environment: {e}")
 
-                if not firebase_admin._apps:
+        env_b64 = os.environ.get("FIREBASE_CREDENTIALS_BASE64")
+        if not cred and env_b64:
+            try:
+                import firebase_admin
+                from firebase_admin import credentials, firestore
+                decoded = base64.b64decode(env_b64).decode("utf-8")
+                cert_dict = json.loads(decoded)
+                cred = credentials.Certificate(cert_dict)
+                logger.info("Initializing Firebase Admin using Base64 credentials from environment variable.")
+            except Exception as e:
+                logger.warning(f"Failed to parse Base64 Firebase credentials from environment: {e}")
+
+        # 2. Check for file path
+        if not cred:
+            cred_path = None
+            for path in [
+                os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
+                os.environ.get("FIREBASE_CREDENTIALS"),
+                *[os.path.join(os.path.dirname(os.path.abspath(__file__)), f) for f in CREDENTIAL_FILES]
+            ]:
+                if path and os.path.isfile(path):
+                    cred_path = path
+                    break
+
+            if cred_path:
+                try:
+                    import firebase_admin
+                    from firebase_admin import credentials, firestore
                     cred = credentials.Certificate(cred_path)
+                    logger.info(f"Connected to Firebase Firestore using credentials from: {cred_path}")
+                except Exception as e:
+                    logger.warning(f"Failed to initialize Firebase Admin with {cred_path}: {e}")
+
+        # 3. Initialize Firebase app if credentials found
+        if cred:
+            try:
+                import firebase_admin
+                from firebase_admin import firestore
+                if not firebase_admin._apps:
                     firebase_admin.initialize_app(cred)
                 self.db = firestore.client()
                 self.is_connected = True
-                logger.info(f"Connected to Firebase Firestore using credentials from: {cred_path}")
             except Exception as e:
-                logger.warning(f"Failed to initialize Firebase Admin with {cred_path}: {e}")
+                logger.warning(f"Failed to initialize Firebase Firestore client: {e}")
                 self.is_connected = False
         else:
             logger.info("No serviceAccountKey.json found. Operating in local mode with backup data.")
